@@ -227,7 +227,7 @@ Judges and evaluators can launch and test the complete Digital Twin dashboard im
 ### Step 1 — Clone the Repository and Navigate to Folder
 
 ```bash
-git clone <PUBLIC_REPOSITORY_URL_PENDING>
+git clone https://github.com/lavanyakothapalli255-afk/share-digital-twin.git
 cd share-digital-twin
 ```
 *(If downloading as a ZIP archive, extract the files and open a terminal in the project directory).*
@@ -496,7 +496,7 @@ When running the dashboard (`http://127.0.0.1:5000`):
 | **Demonstration Video** | Comprehensive video walk-through ($\ge 20$ minutes in duration) covering clinical use case, architecture, code walk-through, live dashboard demo, and limitations. | `[Pending - Video Link to be provided: https://...]` *(Duration: >= 20 mins)* |
 | **System Architecture Document** | Standalone architecture diagram and technical design document in PDF or PPT format. | [architecture/architecture_diagram.pdf](architecture/architecture_diagram.pdf) |
 | **Final Presentation Slide Deck** | Comprehensive presentation slide deck covering challenge problem, methodology, results, and digital twin impact in PDF or PPT format. | `[Pending - Final Presentation PDF/PPT Link to be provided]` |
-| **Public GitHub Repository** | Public open-source code repository with clean-clone reproducibility and documentation. | `[Pending - Public Repository Link upon publication]` |
+| **Public GitHub Repository** | Public open-source code repository with clean-clone reproducibility and documentation. | `[https://github.com/lavanyakothapalli255-afk/share-digital-twin]` |
 
 ---
 
