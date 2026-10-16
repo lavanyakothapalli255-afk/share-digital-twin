@@ -1,0 +1,2190 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="SHARE Digital Twin - Patient Physiological State Monitor. Research prototype for the Happiest Health Digital Twin Challenge 2026.">
+    <title>Patient Digital Twin — Physiological State Monitor</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+    <style>
+        /* =========================================================
+           DESIGN SYSTEM
+           ========================================================= */
+        :root {
+            /* Neutral palette — clinical, restrained */
+            --bg-primary: #f5f6f8;
+            --bg-card: #ffffff;
+            --bg-sidebar: #1e2433;
+            --bg-sidebar-hover: #2a3144;
+
+            --text-primary: #1a1d26;
+            --text-secondary: #5f6577;
+            --text-muted: #8e93a4;
+            --text-inverse: #e8eaf0;
+            --text-sidebar: #c1c5d2;
+
+            /* Accent — teal spectrum for medical context */
+            --accent: #0e8a7d;
+            --accent-light: #e6f5f3;
+            --accent-hover: #0b7168;
+
+            /* State colors */
+            --state-near: #2b9f6f;
+            --state-near-bg: #e8f7ef;
+            --state-moderate: #d4850a;
+            --state-moderate-bg: #fef6e7;
+            --state-high: #c0392b;
+            --state-high-bg: #fde8e6;
+
+            /* Borders */
+            --border: #e3e5eb;
+            --border-light: #eef0f4;
+
+            /* Shadows */
+            --shadow-sm: 0 1px 2px rgba(0,0,0,0.05);
+            --shadow-md: 0 2px 8px rgba(0,0,0,0.06);
+            --shadow-lg: 0 4px 16px rgba(0,0,0,0.08);
+
+            /* Spacing */
+            --radius: 8px;
+            --radius-lg: 12px;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.5;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        /* =========================================================
+           LAYOUT
+           ========================================================= */
+        .app-layout {
+            display: grid;
+            grid-template-columns: 260px 1fr;
+            grid-template-rows: auto 1fr;
+            min-height: 100vh;
+        }
+
+        /* =========================================================
+           HEADER
+           ========================================================= */
+        .header {
+            grid-column: 1 / -1;
+            background: var(--bg-sidebar);
+            padding: 14px 28px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-bottom: 1px solid rgba(255,255,255,0.06);
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+        }
+
+        .header-logo {
+            width: 32px;
+            height: 32px;
+            background: var(--accent);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .header-logo svg {
+            width: 18px;
+            height: 18px;
+            fill: #fff;
+        }
+
+        .header-title {
+            font-size: 15px;
+            font-weight: 600;
+            color: var(--text-inverse);
+            letter-spacing: -0.01em;
+        }
+
+        .header-subtitle {
+            font-size: 11px;
+            color: var(--text-sidebar);
+            font-weight: 400;
+            margin-top: 1px;
+        }
+
+        .header-badge {
+            font-size: 10px;
+            background: rgba(14,138,125,0.15);
+            color: var(--accent);
+            padding: 3px 10px;
+            border-radius: 20px;
+            font-weight: 600;
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+        }
+
+        /* =========================================================
+           SIDEBAR
+           ========================================================= */
+        .sidebar {
+            background: var(--bg-sidebar);
+            padding: 20px 16px;
+            overflow-y: auto;
+            border-right: 1px solid rgba(255,255,255,0.04);
+        }
+
+        .sidebar-section {
+            margin-bottom: 24px;
+        }
+
+        .sidebar-label {
+            font-size: 10px;
+            font-weight: 700;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            padding: 0 8px;
+            margin-bottom: 8px;
+        }
+
+        .patient-select-wrapper {
+            padding: 0 4px;
+        }
+
+        .patient-select {
+            width: 100%;
+            background: var(--bg-sidebar-hover);
+            border: 1px solid rgba(255,255,255,0.08);
+            color: var(--text-inverse);
+            padding: 10px 12px;
+            border-radius: var(--radius);
+            font-family: inherit;
+            font-size: 13px;
+            font-weight: 500;
+            cursor: pointer;
+            appearance: none;
+            -webkit-appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%238e93a4' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 10px center;
+        }
+
+        .patient-select:focus {
+            outline: none;
+            border-color: var(--accent);
+        }
+
+        /* Static profile card in sidebar */
+        .profile-card {
+            margin: 0 4px;
+        }
+
+        .profile-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 6px 8px;
+            border-radius: 4px;
+            transition: background 0.15s;
+        }
+
+        .profile-row:hover {
+            background: var(--bg-sidebar-hover);
+        }
+
+        .profile-label {
+            font-size: 12px;
+            color: var(--text-sidebar);
+        }
+
+        .profile-value {
+            font-size: 12px;
+            color: var(--text-inverse);
+            font-weight: 500;
+            text-align: right;
+        }
+
+        .profile-value.missing {
+            color: var(--text-muted);
+            font-style: italic;
+        }
+
+        .sidebar-divider {
+            height: 1px;
+            background: rgba(255,255,255,0.06);
+            margin: 16px 8px;
+        }
+
+        /* =========================================================
+           MAIN CONTENT
+           ========================================================= */
+        .main-content {
+            padding: 24px;
+            overflow-y: auto;
+        }
+
+        /* Tabs */
+        .tab-bar {
+            display: flex;
+            gap: 2px;
+            background: var(--bg-card);
+            border-radius: var(--radius-lg);
+            padding: 4px;
+            box-shadow: var(--shadow-sm);
+            border: 1px solid var(--border);
+            margin-bottom: 24px;
+            overflow-x: auto;
+        }
+
+        .tab-btn {
+            padding: 9px 18px;
+            border: none;
+            background: transparent;
+            color: var(--text-secondary);
+            font-family: inherit;
+            font-size: 13px;
+            font-weight: 500;
+            border-radius: var(--radius);
+            cursor: pointer;
+            transition: all 0.2s;
+            white-space: nowrap;
+        }
+
+        .tab-btn:hover {
+            color: var(--text-primary);
+            background: var(--bg-primary);
+        }
+
+        .tab-btn.active {
+            background: var(--accent);
+            color: #fff;
+        }
+
+        .tab-panel {
+            display: none;
+        }
+
+        .tab-panel.active {
+            display: block;
+        }
+
+        /* =========================================================
+           CARDS
+           ========================================================= */
+        .card {
+            background: var(--bg-card);
+            border-radius: var(--radius-lg);
+            border: 1px solid var(--border);
+            box-shadow: var(--shadow-sm);
+            padding: 20px 24px;
+            margin-bottom: 20px;
+        }
+
+        .card-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 16px;
+        }
+
+        .card-title {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .card-badge {
+            font-size: 10px;
+            padding: 3px 8px;
+            border-radius: 20px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+        }
+
+        /* =========================================================
+           OVERVIEW GRID
+           ========================================================= */
+        .overview-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 16px;
+            margin-bottom: 20px;
+        }
+
+        /* Metric cards */
+        .metric-card {
+            background: var(--bg-card);
+            border-radius: var(--radius-lg);
+            border: 1px solid var(--border);
+            box-shadow: var(--shadow-sm);
+            padding: 18px 20px;
+            transition: box-shadow 0.2s;
+        }
+
+        .metric-card:hover {
+            box-shadow: var(--shadow-md);
+        }
+
+        .metric-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 12px;
+        }
+
+        .metric-label {
+            font-size: 12px;
+            color: var(--text-secondary);
+            font-weight: 500;
+        }
+
+        .metric-icon {
+            width: 32px;
+            height: 32px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 15px;
+        }
+
+        .metric-value {
+            font-size: 26px;
+            font-weight: 700;
+            color: var(--text-primary);
+            line-height: 1.1;
+        }
+
+        .metric-detail {
+            font-size: 11px;
+            color: var(--text-muted);
+            margin-top: 6px;
+        }
+
+        .metric-baseline {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            margin-top: 8px;
+        }
+
+        .metric-baseline-tag {
+            font-size: 10px;
+            font-weight: 600;
+            padding: 2px 6px;
+            border-radius: 4px;
+        }
+
+        .metric-baseline-text {
+            font-size: 11px;
+            color: var(--text-muted);
+        }
+
+        /* State level badges */
+        .state-near {
+            background: var(--state-near-bg);
+            color: var(--state-near);
+        }
+        .state-moderate {
+            background: var(--state-moderate-bg);
+            color: var(--state-moderate);
+        }
+        .state-high {
+            background: var(--state-high-bg);
+            color: var(--state-high);
+        }
+
+        /* =========================================================
+           TWIN STATE TABLE
+           ========================================================= */
+        .state-table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0;
+            font-size: 13px;
+        }
+
+        .state-table th {
+            text-align: left;
+            font-weight: 600;
+            font-size: 11px;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+            padding: 8px 12px;
+            border-bottom: 2px solid var(--border);
+            background: var(--bg-primary);
+            position: sticky;
+            top: 0;
+            z-index: 1;
+        }
+
+        .state-table td {
+            padding: 8px 12px;
+            border-bottom: 1px solid var(--border-light);
+            color: var(--text-primary);
+        }
+
+        .state-table tbody tr:hover {
+            background: var(--accent-light);
+        }
+
+        .state-table .num {
+            text-align: right;
+            font-variant-numeric: tabular-nums;
+        }
+
+        .state-table-container {
+            max-height: 520px;
+            overflow-y: auto;
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+        }
+
+        /* =========================================================
+           PREDICTION PANEL
+           ========================================================= */
+        .prediction-panel {
+            background: var(--bg-card);
+            border-radius: var(--radius-lg);
+            border: 1px solid var(--border);
+            box-shadow: var(--shadow-sm);
+            padding: 20px 24px;
+            margin-bottom: 20px;
+        }
+
+        .probability-display {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            margin: 16px 0;
+        }
+
+        .probability-ring {
+            position: relative;
+            width: 90px;
+            height: 90px;
+            flex-shrink: 0;
+        }
+
+        .probability-ring svg {
+            transform: rotate(-90deg);
+        }
+
+        .probability-ring .ring-bg {
+            fill: none;
+            stroke: var(--border);
+            stroke-width: 6;
+        }
+
+        .probability-ring .ring-fill {
+            fill: none;
+            stroke-width: 6;
+            stroke-linecap: round;
+            transition: stroke-dashoffset 1s ease;
+        }
+
+        .probability-number {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+
+        .probability-info {
+            flex: 1;
+        }
+
+        .probability-label {
+            font-size: 12px;
+            color: var(--text-secondary);
+            font-weight: 500;
+            margin-bottom: 4px;
+        }
+
+        .probability-model {
+            font-size: 11px;
+            color: var(--text-muted);
+        }
+
+        .disclaimer-box {
+            background: #fef9ef;
+            border: 1px solid #f0dfb8;
+            border-radius: var(--radius);
+            padding: 12px 14px;
+            font-size: 11px;
+            color: #7a5e1e;
+            line-height: 1.6;
+            margin-top: 12px;
+        }
+
+        .disclaimer-box strong {
+            display: block;
+            margin-bottom: 2px;
+            font-size: 10px;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        /* =========================================================
+           FEATURE IMPORTANCE
+           ========================================================= */
+        .importance-bar-container {
+            margin-bottom: 8px;
+        }
+
+        .importance-row {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 6px;
+        }
+
+        .importance-name {
+            width: 180px;
+            font-size: 12px;
+            color: var(--text-secondary);
+            text-align: right;
+            flex-shrink: 0;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .importance-bar-bg {
+            flex: 1;
+            height: 16px;
+            background: var(--bg-primary);
+            border-radius: 3px;
+            overflow: hidden;
+        }
+
+        .importance-bar {
+            height: 100%;
+            background: var(--accent);
+            border-radius: 3px;
+            transition: width 0.6s ease;
+            min-width: 2px;
+        }
+
+        .importance-val {
+            width: 44px;
+            font-size: 11px;
+            color: var(--text-muted);
+            font-variant-numeric: tabular-nums;
+        }
+
+        /* =========================================================
+           DISTRIBUTION BAR
+           ========================================================= */
+        .dist-bar {
+            display: flex;
+            height: 28px;
+            border-radius: var(--radius);
+            overflow: hidden;
+            margin: 12px 0;
+        }
+
+        .dist-bar-segment {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 11px;
+            font-weight: 600;
+            color: #fff;
+            transition: width 0.6s ease;
+        }
+
+        .dist-legend {
+            display: flex;
+            gap: 18px;
+            margin-top: 8px;
+        }
+
+        .dist-legend-item {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 12px;
+            color: var(--text-secondary);
+        }
+
+        .dist-legend-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 3px;
+        }
+
+        /* =========================================================
+           CHART CONTAINERS
+           ========================================================= */
+        .chart-container {
+            position: relative;
+            height: 280px;
+            margin: 8px 0;
+        }
+
+        .chart-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+        }
+
+        @media (max-width: 1100px) {
+            .chart-row {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* =========================================================
+           WHAT-IF PLACEHOLDER
+           ========================================================= */
+        .placeholder-panel {
+            text-align: center;
+            padding: 60px 40px;
+            color: var(--text-muted);
+        }
+
+        .placeholder-icon {
+            font-size: 48px;
+            margin-bottom: 16px;
+            opacity: 0.5;
+        }
+
+        .placeholder-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: var(--text-secondary);
+            margin-bottom: 8px;
+        }
+
+        .placeholder-text {
+            font-size: 13px;
+            max-width: 400px;
+            margin: 0 auto;
+            line-height: 1.7;
+        }
+
+        /* =========================================================
+           LOADING STATE
+           ========================================================= */
+        .loading-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(245,246,248,0.8);
+            backdrop-filter: blur(2px);
+            z-index: 100;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .loading-overlay.active {
+            display: flex;
+        }
+
+        .loading-spinner {
+            width: 36px;
+            height: 36px;
+            border: 3px solid var(--border);
+            border-top-color: var(--accent);
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* =========================================================
+           RESPONSIVE
+           ========================================================= */
+        @media (max-width: 900px) {
+            .app-layout {
+                grid-template-columns: 1fr;
+            }
+            .sidebar {
+                display: none;
+            }
+            .overview-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* =========================================================
+           SCROLLBAR STYLING
+           ========================================================= */
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb {
+            background: var(--border);
+            border-radius: 3px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--text-muted);
+        }
+
+        /* =========================================================
+           DEMO-MODE INFORMATION STRIP
+           ========================================================= */
+        .demo-banner {
+            display: none;   /* shown by JS when is_demo is true */
+            grid-column: 1 / -1;
+            background: #141824;
+            color: #94a3b8;
+            padding: 7px 24px;
+            font-size: 11.5px;
+            font-weight: 500;
+            letter-spacing: 0.01em;
+            border-bottom: 1px solid rgba(14, 138, 125, 0.28);
+            z-index: 100;
+        }
+        .demo-banner.visible {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+        .demo-info-icon {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 14px;
+            height: 14px;
+            color: #14b8a6;
+            flex-shrink: 0;
+        }
+        .demo-info-icon svg {
+            width: 14px;
+            height: 14px;
+            stroke: currentColor;
+        }
+        .demo-pill {
+            display: inline-block;
+            background: rgba(14, 138, 125, 0.16);
+            color: #14b8a6;
+            border: 1px solid rgba(14, 138, 125, 0.35);
+            border-radius: 4px;
+            font-size: 9px;
+            font-weight: 700;
+            letter-spacing: 0.06em;
+            padding: 1px 6px;
+            text-transform: uppercase;
+            line-height: 1.3;
+        }
+        .demo-content {
+            color: #cbd5e1;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+        .demo-content strong {
+            color: #f1f5f9;
+            font-weight: 600;
+            letter-spacing: 0.02em;
+        }
+        .demo-content .demo-sep {
+            color: #64748b;
+            font-weight: 400;
+        }
+        .header-demo-badge {
+            display: none;
+            background: rgba(14, 138, 125, 0.16);
+            color: #14b8a6;
+            border: 1px solid rgba(14, 138, 125, 0.35);
+            border-radius: 4px;
+            font-size: 9.5px;
+            font-weight: 700;
+            letter-spacing: 0.06em;
+            padding: 2px 7px;
+            margin-left: 8px;
+            text-transform: uppercase;
+            vertical-align: middle;
+        }
+        .header-demo-badge.visible {
+            display: inline-block;
+        }
+
+        /* Illustrative-score pill appended next to prediction value */
+        .illustrative-pill {
+            display: inline-block;
+            background: rgba(14, 138, 125, 0.16);
+            color: #14b8a6;
+            border: 1px solid rgba(14, 138, 125, 0.35);
+            border-radius: 4px;
+            font-size: 10px;
+            font-weight: 700;
+            padding: 2px 7px;
+            margin-left: 8px;
+            letter-spacing: 0.04em;
+            vertical-align: middle;
+        }
+    </style>
+</head>
+<body>
+    <div class="loading-overlay" id="loadingOverlay">
+        <div class="loading-spinner"></div>
+    </div>
+
+    <div class="app-layout">
+        <!-- ===================================================
+             DEMO MODE INFORMATION STRIP (shown by JS when is_demo === true)
+             =================================================== -->
+        <div class="demo-banner" id="demoBanner" role="status">
+            <span class="demo-info-icon" aria-hidden="true">
+                <svg viewBox="0 0 16 16" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="8" cy="8" r="7"></circle>
+                    <line x1="8" y1="7.2" x2="8" y2="11.5"></line>
+                    <circle cx="8" cy="4.5" r="0.75" fill="currentColor"></circle>
+                </svg>
+            </span>
+            <span class="demo-pill">DEMO</span>
+            <span class="demo-content">
+                <strong>SYNTHETIC DEMO</strong> <span class="demo-sep">·</span> Fictional patient data <span class="demo-sep">·</span> Research prototype <span class="demo-sep">·</span> Not for clinical use
+            </span>
+        </div>
+
+        <!-- ===================================================
+             HEADER
+             =================================================== -->
+        <header class="header">
+            <div class="header-left">
+                <div class="header-logo">
+                    <svg viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
+                </div>
+                <div>
+                    <div class="header-title">
+                        Patient Digital Twin — Physiological State Monitor
+                        <span class="header-demo-badge" id="headerDemoBadge">DEMO</span>
+                    </div>
+                    <div class="header-subtitle">SHARE Database · Hypertensive Cohort · ECG-derived HRV</div>
+                </div>
+            </div>
+            <span class="header-badge">Research Prototype</span>
+        </header>
+
+        <!-- ===================================================
+             SIDEBAR
+             =================================================== -->
+        <aside class="sidebar">
+            <div class="sidebar-section">
+                <div class="sidebar-label">Patient</div>
+                <div class="patient-select-wrapper">
+                    <select class="patient-select" id="patientSelect">
+                        {% for pid in patient_ids %}
+                        <option value="{{ pid }}" {% if pid == default_patient %}selected{% endif %}>
+                            Patient {{ pid }}
+                        </option>
+                        {% endfor %}
+                    </select>
+                </div>
+            </div>
+
+            <div class="sidebar-divider"></div>
+
+            <div class="sidebar-section">
+                <div class="sidebar-label">Static Clinical Profile</div>
+                <div class="profile-card" id="profileCard">
+                    <div class="profile-row">
+                        <span class="profile-label">Loading...</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="sidebar-divider"></div>
+
+            <div class="sidebar-section">
+                <div class="sidebar-label">Recording</div>
+                <div class="profile-card" id="recordingCard">
+                    <div class="profile-row">
+                        <span class="profile-label">Loading...</span>
+                    </div>
+                </div>
+            </div>
+        </aside>
+
+        <!-- ===================================================
+             MAIN CONTENT
+             =================================================== -->
+        <main class="main-content">
+            <!-- Tab bar -->
+            <div class="tab-bar">
+                <button class="tab-btn active" data-tab="overview" id="tabOverview">Overview</button>
+                <button class="tab-btn" data-tab="twin-state" id="tabTwinState">Twin State</button>
+                <button class="tab-btn" data-tab="trajectory" id="tabTrajectory">Trajectory</button>
+                <button class="tab-btn" data-tab="model" id="tabModel">Model Explanation</button>
+                <button class="tab-btn" data-tab="whatif" id="tabWhatIf">What-If Simulation</button>
+            </div>
+
+            <!-- ===============================================
+                 TAB: OVERVIEW
+                 =============================================== -->
+            <div class="tab-panel active" id="panel-overview">
+                <!-- Patient ID banner -->
+                <div class="card" style="text-align:center; padding:14px 24px;">
+                    <span style="font-size:13px; color:var(--text-secondary);">PATIENT TWIN</span>
+                    <span style="font-size:20px; font-weight:700; margin-left:12px;" id="overviewPatientId">—</span>
+                </div>
+
+                <!-- Current state metrics -->
+                <p style="font-size:12px; color:var(--text-muted); margin-bottom:16px;">
+                    Overall Twin Deviation combines the five HRV-derived signals. Individual signals may deviate more strongly than the aggregate Twin state.
+                </p>
+                <div class="overview-grid" id="overviewMetrics">
+                    <!-- Populated by JS -->
+                </div>
+
+                <!-- Deviation distribution -->
+                <div class="card">
+                    <div class="card-header">
+                        <span class="card-title">State Deviation Distribution (24-hour)</span>
+                        <span class="card-badge" style="background:var(--accent-light); color:var(--accent);">Engineering measure</span>
+                    </div>
+                    <div class="dist-bar" id="distBar">
+                        <!-- Populated by JS -->
+                    </div>
+                    <div class="dist-legend" id="distLegend">
+                        <div class="dist-legend-item"><div class="dist-legend-dot" style="background:var(--state-near)"></div>Near Baseline</div>
+                        <div class="dist-legend-item"><div class="dist-legend-dot" style="background:var(--state-moderate)"></div>Moderate Deviation</div>
+                        <div class="dist-legend-item"><div class="dist-legend-dot" style="background:var(--state-high)"></div>High Deviation</div>
+                    </div>
+                </div>
+
+                <!-- Mini trajectory preview -->
+                <div class="card">
+                    <div class="card-header">
+                        <span class="card-title">HR Trajectory (24-hour)</span>
+                    </div>
+                    <div class="chart-container">
+                        <canvas id="overviewHrChart"></canvas>
+                    </div>
+                </div>
+
+                <!-- Prediction summary -->
+                <div class="prediction-panel" id="predictionPanel">
+                    <div class="card-header">
+                        <span class="card-title">Exploratory Model Output</span>
+                        <span class="card-badge state-moderate" id="modelStatusBadge">Exploratory</span>
+                    </div>
+
+                    <!-- Dual-Stream Mode Toggle (Default: Dynamic-Only) -->
+                    <div style="display:flex; gap:6px; margin: 10px 0 14px 0; background: var(--bg-primary); padding: 4px; border-radius: 6px; border: 1px solid var(--border);">
+                        <button id="btnModeDyn" type="button" onclick="selectModelMode('dynamic')" style="flex:1; padding: 6px 10px; font-size: 11px; font-weight: 600; border-radius: 4px; border: none; cursor: pointer; background: var(--accent); color: #fff; transition: all 0.2s;">Dynamic-Only (Default)</button>
+                        <button id="btnModeDual" type="button" onclick="selectModelMode('dual_stream')" style="flex:1; padding: 6px 10px; font-size: 11px; font-weight: 600; border-radius: 4px; border: none; cursor: pointer; background: transparent; color: var(--text-secondary); transition: all 0.2s;">Dual-Stream 80/20 (Exploratory)</button>
+                    </div>
+
+                    <div class="probability-display">
+                        <div class="probability-ring" id="probRing">
+                            <svg width="90" height="90" viewBox="0 0 90 90">
+                                <circle class="ring-bg" cx="45" cy="45" r="38"/>
+                                <circle class="ring-fill" cx="45" cy="45" r="38"
+                                    stroke-dasharray="238.76"
+                                    stroke-dashoffset="238.76"
+                                    id="probRingFill"/>
+                            </svg>
+                            <span class="probability-number" id="probValue">—</span>
+                        </div>
+                        <div class="probability-info">
+                            <div class="probability-label" id="probLabel">Exploratory dynamic score</div>
+                            <div class="probability-model" id="probModel">—</div>
+                            <div id="dualStreamBreakdown" style="display:none; font-size: 11px; color: var(--text-muted); margin-top: 4px;">
+                                Dynamic: <span id="dynCompVal" style="font-weight:600;">—</span> (80%) | Static: <span id="statCompVal" style="font-weight:600;">—</span> (20%)
+                            </div>
+                        </div>
+                    </div>
+                    <div class="disclaimer-box" id="probDisclaimerBox">
+                        <strong>⚠ Clinical Disclaimer</strong>
+                        <span id="probDisclaimerText">Research model output for demonstration only; not an individual clinical risk estimate.<br><br>
+                        Research prototype only. This model has not been clinically validated and is not intended for diagnosis or treatment decisions. The SHARE dataset contains 139 patients with only 17 vascular-event cases. All predictive results are exploratory and do not constitute clinical validation.</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ===============================================
+                 TAB: TWIN STATE
+                 =============================================== -->
+            <div class="tab-panel" id="panel-twin-state">
+                <div class="card">
+                    <div class="card-header">
+                        <span class="card-title">Current Twin State — Baseline Comparison</span>
+                        <span class="card-badge" style="background:var(--accent-light); color:var(--accent);" id="currentStateLevel">—</span>
+                    </div>
+                    <p style="font-size:12px; color:var(--text-muted); margin-bottom:16px;">
+                        Baseline is the patient's median physiological state across all 15-minute windows.
+                        Deviation is an engineering measure, not a clinical severity score.<br><br>
+                        Overall Twin Deviation combines the five HRV-derived signals. Individual signals may deviate more strongly than the aggregate Twin state.
+                    </p>
+                    <div id="currentStateComparison">
+                        <!-- Populated by JS -->
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <span class="card-title">All 15-Minute Windows</span>
+                    </div>
+                    <div class="state-table-container">
+                        <table class="state-table" id="stateTable">
+                            <thead>
+                                <tr>
+                                    <th>Window</th>
+                                    <th>Time (h)</th>
+                                    <th class="num">HR</th>
+                                    <th class="num">SDNN</th>
+                                    <th class="num">RMSSD</th>
+                                    <th class="num">pNN50</th>
+                                    <th class="num">Deviation</th>
+                                    <th>Level</th>
+                                </tr>
+                            </thead>
+                            <tbody id="stateTableBody">
+                                <!-- Populated by JS -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ===============================================
+                 TAB: TRAJECTORY
+                 =============================================== -->
+            <div class="tab-panel" id="panel-trajectory">
+                <div class="card">
+                    <div class="card-header">
+                        <span class="card-title">Twin State Deviation Trajectory (24-hour)</span>
+                    </div>
+                    <p style="font-size:12px; color:var(--text-muted); margin-bottom:8px;">
+                        Combined deviation from patient-specific baseline. Dashed lines indicate engineering threshold boundaries (not clinical).
+                    </p>
+                    <div class="chart-container" style="height:300px">
+                        <canvas id="deviationChart"></canvas>
+                    </div>
+                </div>
+
+                <div class="chart-row">
+                    <div class="card">
+                        <div class="card-header"><span class="card-title">HR Trajectory</span></div>
+                        <div class="chart-container"><canvas id="hrChart"></canvas></div>
+                    </div>
+                    <div class="card">
+                        <div class="card-header"><span class="card-title">SDNN Trajectory</span></div>
+                        <div class="chart-container"><canvas id="sdnnChart"></canvas></div>
+                    </div>
+                </div>
+
+                <div class="chart-row">
+                    <div class="card">
+                        <div class="card-header"><span class="card-title">RMSSD Trajectory</span></div>
+                        <div class="chart-container"><canvas id="rmssdChart"></canvas></div>
+                    </div>
+                    <div class="card">
+                        <div class="card-header"><span class="card-title">pNN50 Trajectory</span></div>
+                        <div class="chart-container"><canvas id="pnn50Chart"></canvas></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ===============================================
+                 TAB: MODEL EXPLANATION
+                 =============================================== -->
+            <div class="tab-panel" id="panel-model">
+                <!-- Permanent Model Stream Comparison Card -->
+                <div class="card">
+                    <div class="card-header">
+                        <span class="card-title">Model Stream Comparison</span>
+                        <span class="card-badge" style="background:var(--accent-light); color:var(--accent);">Exploratory Prototype</span>
+                    </div>
+                    <p style="font-size:12px; color:var(--text-muted); margin-bottom:14px;">
+                        Comparative evaluation of exploratory model streams evaluated under 5-fold stratified, patient-level cross-validation on the SHARE cohort (139 patients, 17 vascular-event cases). All results are exploratory research prototypes and are not clinically validated.
+                    </p>
+                    <div class="state-table-container">
+                        <table class="state-table">
+                            <thead>
+                                <tr>
+                                    <th>Model Stream</th>
+                                    <th>Input Modality &amp; Feature Set</th>
+                                    <th class="num">Features</th>
+                                    <th class="num">OOF ROC-AUC</th>
+                                    <th>Fusion Configuration &amp; Role</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><strong>Dynamic-Only (Default)</strong></td>
+                                    <td>24-hour ECG-derived HRV summary statistics</td>
+                                    <td class="num">42</td>
+                                    <td class="num">0.6572</td>
+                                    <td>Primary dynamic stream (80% weight in exploratory blend)</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Static-Only</strong></td>
+                                    <td>Baseline clinical demographics &amp; measurements</td>
+                                    <td class="num">12</td>
+                                    <td class="num">0.526</td>
+                                    <td>Contextual static stream (20% weight in exploratory blend)</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Dual-Stream Late Fusion</strong></td>
+                                    <td>Linear decision ensemble of dynamic and static streams</td>
+                                    <td class="num">54 total</td>
+                                    <td class="num">0.6553</td>
+                                    <td>Exploratory blend: 0.80 &times; Dynamic + 0.20 &times; Static</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="disclaimer-box" style="margin-top:14px;">
+                        <strong>⚠ Weighting &amp; Clinical Limitation</strong>
+                        The 80/20 late-fusion weights are pre-specified experimental weights, not clinically established weights. Results are derived from a cohort of 139 patients with 17 vascular-event cases; these models are exploratory research prototypes. Not clinically validated; do not use for diagnosis, individual patient-care decisions, or treatment recommendations.
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <span class="card-title">Model Feature Importance — Association, Not Causation</span>
+                    </div>
+                    <p style="font-size:12px; color:var(--text-muted); margin-bottom:16px;">
+                        Feature importance values indicate association with model output, not physiological causation.
+                        These values describe how the Random Forest model allocates importance across HRV-derived features.
+                    </p>
+                    <div id="importanceContainer">
+                        <!-- Populated by JS -->
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <span class="card-title">Model-Associated Signals</span>
+                    </div>
+                    <p style="font-size:12px; color:var(--text-muted); margin-bottom:12px;">
+                        Features associated with model output (from Experiment 07/09 analysis).
+                        Association does not imply causation.
+                    </p>
+                    <div id="signalsList">
+                        <!-- Populated by JS -->
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <span class="card-title">Model Methodology</span>
+                    </div>
+                    <table class="state-table" id="modelMetaTable">
+                        <tbody>
+                            <!-- Populated by JS -->
+                        </tbody>
+                    </table>
+                    <div class="disclaimer-box" style="margin-top:16px;">
+                        <strong>⚠ Research Limitation</strong>
+                        The SHARE dataset contains 139 patients with only 17 vascular-event cases.
+                        All predictive results are exploratory and do not constitute clinical validation.
+                        The trajectory layer did not demonstrate improved predictive performance over dynamic HRV features.
+                    </div>
+                </div>
+            </div>
+
+            <!-- ===============================================
+                 TAB: WHAT-IF SIMULATION
+                 =============================================== -->
+            <div class="tab-panel" id="panel-whatif">
+                <div class="card">
+                    <div class="card-header">
+                        <span class="card-title">What-If Twin Simulation</span>
+                    </div>
+                    <p style="font-size:12px; color:var(--text-muted); margin-bottom:16px;">
+                        This module applies controlled mathematical perturbations to the
+                        observed physiological state and recomputes the Digital Twin's
+                        baseline-relative state. It demonstrates how the Twin representation
+                        responds to hypothetical physiological changes.
+                    </p>
+                    <div class="disclaimer-box" style="margin-bottom:16px;">
+                        <strong>⚠ Important limitation</strong>
+                        The SHARE dataset does not contain intervention-response data.
+                        Therefore these simulations are counterfactual engineering
+                        demonstrations and should not be interpreted as treatment effects,
+                        clinical recommendations, or validated individual risk estimates.
+                    </div>
+
+                    <div class="simulation-grid" style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+                        <!-- Controls -->
+                        <div class="simulation-controls">
+                            <h4 style="margin-bottom: 12px; border-bottom: 1px solid var(--border-color); padding-bottom: 4px;">Simulated physiological change</h4>
+
+                            <div class="control-group" style="margin-bottom: 15px;">
+                                <label style="display: flex; justify-content: space-between; font-size: 13px;">
+                                    <span>Heart Rate</span>
+                                    <span id="val_HR_bpm">0%</span>
+                                </label>
+                                <input type="range" id="sim_HR_bpm" min="-10" max="10" value="0" style="width: 100%;">
+                                <div style="display: flex; justify-content: space-between; font-size: 11px; color: var(--text-muted);">
+                                    <span>-10%</span><span>+10%</span>
+                                </div>
+                            </div>
+
+                            <div class="control-group" style="margin-bottom: 15px;">
+                                <label style="display: flex; justify-content: space-between; font-size: 13px;">
+                                    <span>SDNN</span>
+                                    <span id="val_SDNN_ms">0%</span>
+                                </label>
+                                <input type="range" id="sim_SDNN_ms" min="-20" max="20" value="0" style="width: 100%;">
+                                <div style="display: flex; justify-content: space-between; font-size: 11px; color: var(--text-muted);">
+                                    <span>-20%</span><span>+20%</span>
+                                </div>
+                            </div>
+
+                            <div class="control-group" style="margin-bottom: 15px;">
+                                <label style="display: flex; justify-content: space-between; font-size: 13px;">
+                                    <span>RMSSD</span>
+                                    <span id="val_RMSSD_ms">0%</span>
+                                </label>
+                                <input type="range" id="sim_RMSSD_ms" min="-20" max="20" value="0" style="width: 100%;">
+                                <div style="display: flex; justify-content: space-between; font-size: 11px; color: var(--text-muted);">
+                                    <span>-20%</span><span>+20%</span>
+                                </div>
+                            </div>
+
+                            <div class="control-group" style="margin-bottom: 15px;">
+                                <label style="display: flex; justify-content: space-between; font-size: 13px;">
+                                    <span>pNN50</span>
+                                    <span id="val_pNN50_percent">0%</span>
+                                </label>
+                                <input type="range" id="sim_pNN50_percent" min="-20" max="20" value="0" style="width: 100%;">
+                                <div style="display: flex; justify-content: space-between; font-size: 11px; color: var(--text-muted);">
+                                    <span>-20%</span><span>+20%</span>
+                                </div>
+                            </div>
+
+                            <div style="display: flex; gap: 10px; margin-top: 20px;">
+                                <button onclick="resetSimulation()" class="btn" style="flex: 1; padding: 8px; background: var(--bg-tertiary); border: 1px solid var(--border-color); color: var(--text-primary); border-radius: 4px; cursor: pointer;">Reset to Observed State</button>
+                                <button onclick="runSimulation()" class="btn" style="flex: 1; padding: 8px; background: var(--accent); color: white; border: none; border-radius: 4px; cursor: pointer;">Run Simulation</button>
+                            </div>
+                        </div>
+
+                        <!-- Results -->
+                        <div class="simulation-results">
+                            <h4 style="margin-bottom: 12px; border-bottom: 1px solid var(--border-color); padding-bottom: 4px;">Result</h4>
+                            <table class="state-table" style="width: 100%; font-size: 13px;">
+                                <thead>
+                                    <tr>
+                                        <th style="text-align: left;">Metric</th>
+                                        <th style="text-align: right;">Observed State</th>
+                                        <th style="text-align: right;">Simulated State</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="simulationResultsTable">
+                                    <!-- Populated by JS -->
+                                    <tr><td colspan="3" style="text-align: center; color: var(--text-muted);">Run simulation to see results</td></tr>
+                                </tbody>
+                            </table>
+
+                            <div style="margin-top: 20px; padding: 10px; background: var(--bg-tertiary); border-radius: 4px;">
+                                <div style="font-weight: 500; margin-bottom: 5px;">Model Response</div>
+                                <div id="simulationModelResponse" style="font-size: 12px; color: var(--text-secondary);">
+                                    Exploratory model response not computed for this simulation because the available data do not support a reliable reconstruction of all 42 patient-level model features.
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- =========================================================
+         JAVASCRIPT
+         ========================================================= -->
+    <script>
+    (function() {
+        'use strict';
+
+        // =====================================================
+        // STATE
+        // =====================================================
+
+        let currentData = null;
+        let charts = {};
+        let activeModelMode = 'dynamic';
+
+        // =====================================================
+        // DEMO-MODE BANNER
+        // =====================================================
+
+        function updateDemoBanner(isDemoMode) {
+            const banner = document.getElementById('demoBanner');
+            if (banner) {
+                if (isDemoMode) {
+                    banner.classList.add('visible');
+                } else {
+                    banner.classList.remove('visible');
+                }
+            }
+            const headerBadge = document.getElementById('headerDemoBadge');
+            if (headerBadge) {
+                if (isDemoMode) {
+                    headerBadge.classList.add('visible');
+                } else {
+                    headerBadge.classList.remove('visible');
+                }
+            }
+        }
+
+        const HRV_FEATURES = [
+            'HR_bpm', 'Mean_RR_ms', 'SDNN_ms', 'RMSSD_ms', 'pNN50_percent'
+        ];
+
+        const FEATURE_ICONS = {
+            'HR_bpm': '❤️',
+            'Mean_RR_ms': '📊',
+            'SDNN_ms': '📈',
+            'RMSSD_ms': '〰️',
+            'pNN50_percent': '📉',
+        };
+
+        const FEATURE_COLORS = {
+            'HR_bpm': '#e74c3c',
+            'Mean_RR_ms': '#3498db',
+            'SDNN_ms': '#27ae60',
+            'RMSSD_ms': '#8e44ad',
+            'pNN50_percent': '#e67e22',
+        };
+
+        const STATE_CLASSES = {
+            'Near Baseline': 'state-near',
+            'Moderate Deviation': 'state-moderate',
+            'High Deviation': 'state-high',
+        };
+
+
+        // =====================================================
+        // TABS
+        // =====================================================
+
+        document.querySelectorAll('.tab-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+                document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+                btn.classList.add('active');
+                document.getElementById('panel-' + btn.dataset.tab).classList.add('active');
+            });
+        });
+
+
+        // =====================================================
+        // PATIENT SELECT
+        // =====================================================
+
+        const patientSelect = document.getElementById('patientSelect');
+
+        patientSelect.addEventListener('change', () => {
+            loadPatient(patientSelect.value);
+        });
+
+
+        // =====================================================
+        // DATA LOADING
+        // =====================================================
+
+        function showLoading() {
+            document.getElementById('loadingOverlay').classList.add('active');
+        }
+
+        function hideLoading() {
+            document.getElementById('loadingOverlay').classList.remove('active');
+        }
+
+        async function loadPatient(patientId) {
+            showLoading();
+            try {
+                const response = await fetch(`/api/patient/${patientId}`);
+                if (!response.ok) throw new Error('Patient not found');
+                currentData = await response.json();
+                renderAll();
+            } catch (error) {
+                console.error('Error loading patient:', error);
+                alert('Failed to load patient data. Check console for details.');
+            } finally {
+                hideLoading();
+            }
+        }
+
+
+        // =====================================================
+        // RENDER ALL
+        // =====================================================
+
+        function renderAll() {
+            if (!currentData) return;
+            updateDemoBanner(currentData.is_demo === true);
+            renderProfile();
+            renderRecording();
+            renderOverview();
+            renderCurrentState();
+            renderStateTable();
+            renderTrajectoryCharts();
+            renderPrediction();
+            renderFeatureImportance();
+            renderModelMeta();
+        }
+
+
+        // =====================================================
+        // RENDER: PROFILE
+        // =====================================================
+
+        function renderProfile() {
+            const d = currentData;
+            const card = document.getElementById('profileCard');
+            const labels = d.static_labels || {};
+
+            if (!d.static_profile) {
+                card.innerHTML = '<div class="profile-row"><span class="profile-label">No data available</span></div>';
+                return;
+            }
+
+            const fields = [
+                'sex', 'age', 'BMI', 'smoker',
+                'SBP_mmHg', 'DBP_mmHg', 'EF_percent',
+                'LVMi_g_m2', 'IMT_MAX_mm'
+            ];
+
+            let html = '';
+            fields.forEach(f => {
+                const val = d.static_profile[f];
+                const label = labels[f] || f;
+                let display = val;
+                if (val === null || val === undefined || val === '') {
+                    display = '<span class="missing">n/a</span>';
+                } else if (typeof val === 'number') {
+                    display = Number.isInteger(val) ? val : val.toFixed(1);
+                }
+                html += `<div class="profile-row">
+                    <span class="profile-label">${label}</span>
+                    <span class="profile-value">${display}</span>
+                </div>`;
+            });
+
+            card.innerHTML = html;
+        }
+
+
+        // =====================================================
+        // RENDER: RECORDING INFO
+        // =====================================================
+
+        function renderRecording() {
+            const card = document.getElementById('recordingCard');
+            const d = currentData;
+            card.innerHTML = `
+                <div class="profile-row">
+                    <span class="profile-label">Windows</span>
+                    <span class="profile-value">${d.num_windows}</span>
+                </div>
+                <div class="profile-row">
+                    <span class="profile-label">Duration</span>
+                    <span class="profile-value">${d.recording_hours} h</span>
+                </div>
+                <div class="profile-row">
+                    <span class="profile-label">Window Size</span>
+                    <span class="profile-value">15 min</span>
+                </div>
+                <div class="profile-row">
+                    <span class="profile-label">ECG Fs</span>
+                    <span class="profile-value">128 Hz</span>
+                </div>
+            `;
+        }
+
+
+        // =====================================================
+        // RENDER: OVERVIEW METRICS
+        // =====================================================
+
+        function renderOverview() {
+            const d = currentData;
+            const cs = d.current_state;
+            const bl = d.baseline;
+            const labels = d.hrv_labels || {};
+
+            document.getElementById('overviewPatientId').textContent = d.patient_id;
+
+            if (!cs) return;
+
+            const grid = document.getElementById('overviewMetrics');
+            let html = '';
+
+            HRV_FEATURES.forEach(f => {
+                const feat = cs.features[f];
+                if (!feat) return;
+
+                const diff = feat.deviation;
+                const diffSign = diff > 0 ? '+' : '';
+                const zScore = feat.robust_z;
+                const icon = FEATURE_ICONS[f] || '📊';
+
+                // Determine state color for z-score
+                const absZ = Math.abs(zScore || 0);
+                let stateClass = 'state-near';
+                if (absZ >= 2) stateClass = 'state-high';
+                else if (absZ >= 1) stateClass = 'state-moderate';
+
+                html += `
+                <div class="metric-card">
+                    <div class="metric-header">
+                        <div class="metric-label">${labels[f] || f}</div>
+                        <div class="metric-icon" style="background:${FEATURE_COLORS[f]}15; font-size:18px;">${icon}</div>
+                    </div>
+                    <div class="metric-value">${feat.current !== null ? feat.current : '—'}</div>
+                    <div class="metric-detail">Baseline: ${feat.baseline !== null ? feat.baseline : '—'}</div>
+                    <div class="metric-baseline">
+                        <span class="metric-baseline-tag ${stateClass}">${diffSign}${diff !== null ? diff : '—'}</span>
+                        <span class="metric-baseline-text">z = ${zScore !== null ? zScore : '—'}</span>
+                    </div>
+                </div>`;
+            });
+
+            // Deviation score card
+            html += `
+            <div class="metric-card">
+                <div class="metric-header">
+                    <div class="metric-label">Overall Twin Deviation</div>
+                    <div class="metric-icon" style="background:var(--accent-light); font-size:18px;">🎯</div>
+                </div>
+                <div class="metric-value">${cs.deviation_score}</div>
+                <div class="metric-detail">Engineering deviation index</div>
+                <div class="metric-baseline">
+                    <span class="metric-baseline-tag ${STATE_CLASSES[cs.deviation_level] || ''}">${cs.deviation_level}</span>
+                </div>
+            </div>`;
+
+            grid.innerHTML = html;
+
+            // Distribution bar
+            renderDistribution();
+
+            // Overview HR chart
+            renderOverviewChart();
+        }
+
+
+        // =====================================================
+        // RENDER: DISTRIBUTION BAR
+        // =====================================================
+
+        function renderDistribution() {
+            const dist = currentData.deviation_distribution;
+            const total = dist.total_windows || 1;
+
+            const near = dist['Near Baseline'] || 0;
+            const mod = dist['Moderate Deviation'] || 0;
+            const high = dist['High Deviation'] || 0;
+
+            const bar = document.getElementById('distBar');
+            bar.innerHTML = `
+                <div class="dist-bar-segment" style="width:${(near/total)*100}%; background:var(--state-near);">
+                    ${near > 0 ? near : ''}
+                </div>
+                <div class="dist-bar-segment" style="width:${(mod/total)*100}%; background:var(--state-moderate);">
+                    ${mod > 0 ? mod : ''}
+                </div>
+                <div class="dist-bar-segment" style="width:${(high/total)*100}%; background:var(--state-high);">
+                    ${high > 0 ? high : ''}
+                </div>
+            `;
+        }
+
+
+        // =====================================================
+        // RENDER: OVERVIEW HR CHART
+        // =====================================================
+
+        function renderOverviewChart() {
+            const t = currentData.trajectory;
+            if (!t) return;
+
+            if (charts.overviewHr) charts.overviewHr.destroy();
+
+            const ctx = document.getElementById('overviewHrChart').getContext('2d');
+            const baseline = t.HR_bpm_baseline;
+
+            charts.overviewHr = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: t.time_hours,
+                    datasets: [
+                        {
+                            label: 'HR (bpm)',
+                            data: t.HR_bpm_values,
+                            borderColor: FEATURE_COLORS.HR_bpm,
+                            backgroundColor: FEATURE_COLORS.HR_bpm + '15',
+                            fill: true,
+                            borderWidth: 1.5,
+                            pointRadius: 1.5,
+                            tension: 0.3,
+                        },
+                        {
+                            label: 'Baseline',
+                            data: t.time_hours.map(() => baseline),
+                            borderColor: '#7f8c8d',
+                            borderDash: [6, 4],
+                            borderWidth: 1.5,
+                            pointRadius: 0,
+                            fill: false,
+                        }
+                    ]
+                },
+                options: chartOptions('Time (hours)', 'Heart Rate (bpm)'),
+            });
+        }
+
+
+        // =====================================================
+        // RENDER: CURRENT STATE COMPARISON
+        // =====================================================
+
+        function renderCurrentState() {
+            const cs = currentData.current_state;
+            if (!cs) return;
+
+            document.getElementById('currentStateLevel').textContent = cs.deviation_level;
+            document.getElementById('currentStateLevel').className =
+                'card-badge ' + (STATE_CLASSES[cs.deviation_level] || '');
+
+            const container = document.getElementById('currentStateComparison');
+            const labels = currentData.hrv_labels || {};
+
+            let html = `<table class="state-table"><thead><tr>
+                <th>Feature</th>
+                <th class="num">Baseline</th>
+                <th class="num">Current</th>
+                <th class="num">Deviation</th>
+                <th class="num">Robust z</th>
+            </tr></thead><tbody>`;
+
+            HRV_FEATURES.forEach(f => {
+                const feat = cs.features[f];
+                if (!feat) return;
+                const absZ = Math.abs(feat.robust_z || 0);
+                let stateClass = '';
+                if (absZ >= 2) stateClass = 'state-high';
+                else if (absZ >= 1) stateClass = 'state-moderate';
+                else stateClass = 'state-near';
+
+                html += `<tr>
+                    <td><strong>${labels[f] || f}</strong></td>
+                    <td class="num">${feat.baseline ?? '—'}</td>
+                    <td class="num">${feat.current ?? '—'}</td>
+                    <td class="num">${feat.deviation !== null ? (feat.deviation > 0 ? '+' : '') + feat.deviation : '—'}</td>
+                    <td class="num"><span class="metric-baseline-tag ${stateClass}">${feat.robust_z ?? '—'}</span></td>
+                </tr>`;
+            });
+
+            html += `<tr style="font-weight:600; background:var(--bg-primary);">
+                <td>Overall Twin Deviation</td>
+                <td class="num">0</td>
+                <td class="num">${cs.deviation_score}</td>
+                <td class="num">${cs.deviation_score}</td>
+                <td class="num"><span class="metric-baseline-tag ${STATE_CLASSES[cs.deviation_level] || ''}">${cs.deviation_level}</span></td>
+            </tr>`;
+
+            html += '</tbody></table>';
+            container.innerHTML = html;
+        }
+
+
+        // =====================================================
+        // RENDER: STATE TABLE
+        // =====================================================
+
+        function renderStateTable() {
+            const tbody = document.getElementById('stateTableBody');
+            // We don't have all summaries in the API response by default,
+            // so reconstruct from trajectory
+            const t = currentData.trajectory;
+            if (!t) return;
+
+            let html = '';
+            const n = t.time_hours.length;
+
+            for (let i = 0; i < n; i++) {
+                const level = t.deviation_levels[i];
+                const cls = STATE_CLASSES[level] || '';
+                html += `<tr>
+                    <td>${i + 1}</td>
+                    <td>${t.time_hours[i]}</td>
+                    <td class="num">${t.HR_bpm_values[i].toFixed(1)}</td>
+                    <td class="num">${t.SDNN_ms_values[i].toFixed(1)}</td>
+                    <td class="num">${t.RMSSD_ms_values[i].toFixed(1)}</td>
+                    <td class="num">${t.pNN50_percent_values[i].toFixed(2)}</td>
+                    <td class="num">${t.deviation_values[i].toFixed(3)}</td>
+                    <td><span class="card-badge ${cls}" style="font-size:10px">${level}</span></td>
+                </tr>`;
+            }
+
+            tbody.innerHTML = html;
+        }
+
+
+        // =====================================================
+        // RENDER: TRAJECTORY CHARTS
+        // =====================================================
+
+        function renderTrajectoryCharts() {
+            const t = currentData.trajectory;
+            if (!t) return;
+
+            // Deviation chart
+            renderDeviationChart(t);
+
+            // Individual feature charts
+            renderFeatureChart('hrChart', t, 'HR_bpm', 'Heart Rate (bpm)');
+            renderFeatureChart('sdnnChart', t, 'SDNN_ms', 'SDNN (ms)');
+            renderFeatureChart('rmssdChart', t, 'RMSSD_ms', 'RMSSD (ms)');
+            renderFeatureChart('pnn50Chart', t, 'pNN50_percent', 'pNN50 (%)');
+        }
+
+        function renderDeviationChart(t) {
+            if (charts.deviation) charts.deviation.destroy();
+
+            const ctx = document.getElementById('deviationChart').getContext('2d');
+
+            // Color segments by level
+            const colors = t.deviation_levels.map(l => {
+                if (l === 'High Deviation') return 'rgba(192,57,43,0.8)';
+                if (l === 'Moderate Deviation') return 'rgba(212,133,10,0.8)';
+                return 'rgba(43,159,111,0.8)';
+            });
+
+            charts.deviation = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: t.time_hours,
+                    datasets: [
+                        {
+                            label: 'Twin State Deviation',
+                            data: t.deviation_values,
+                            borderColor: '#2c3e50',
+                            backgroundColor: 'rgba(44,62,80,0.06)',
+                            fill: true,
+                            borderWidth: 1.5,
+                            pointRadius: 2,
+                            pointBackgroundColor: colors,
+                            tension: 0.3,
+                        },
+                        {
+                            label: 'Moderate threshold',
+                            data: t.time_hours.map(() => 1.0),
+                            borderColor: 'rgba(212,133,10,0.5)',
+                            borderDash: [6, 4],
+                            borderWidth: 1.5,
+                            pointRadius: 0,
+                            fill: false,
+                        },
+                        {
+                            label: 'High threshold',
+                            data: t.time_hours.map(() => 2.0),
+                            borderColor: 'rgba(192,57,43,0.5)',
+                            borderDash: [6, 4],
+                            borderWidth: 1.5,
+                            pointRadius: 0,
+                            fill: false,
+                        }
+                    ]
+                },
+                options: chartOptions('Time (hours)', 'Twin State Deviation'),
+            });
+        }
+
+        function renderFeatureChart(canvasId, t, feature, yLabel) {
+            if (charts[feature]) charts[feature].destroy();
+
+            const ctx = document.getElementById(canvasId).getContext('2d');
+            const baseline = t[feature + '_baseline'];
+
+            charts[feature] = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: t.time_hours,
+                    datasets: [
+                        {
+                            label: yLabel,
+                            data: t[feature + '_values'],
+                            borderColor: FEATURE_COLORS[feature],
+                            backgroundColor: FEATURE_COLORS[feature] + '12',
+                            fill: true,
+                            borderWidth: 1.5,
+                            pointRadius: 1.5,
+                            tension: 0.3,
+                        },
+                        {
+                            label: 'Baseline',
+                            data: t.time_hours.map(() => baseline),
+                            borderColor: '#7f8c8d',
+                            borderDash: [6, 4],
+                            borderWidth: 1.5,
+                            pointRadius: 0,
+                            fill: false,
+                        }
+                    ]
+                },
+                options: chartOptions('Time (hours)', yLabel),
+            });
+        }
+
+
+        // =====================================================
+        // RENDER: PREDICTION
+        // =====================================================
+
+        function selectModelMode(mode) {
+            activeModelMode = mode;
+            const btnDyn = document.getElementById('btnModeDyn');
+            const btnDual = document.getElementById('btnModeDual');
+            if (btnDyn && btnDual) {
+                if (mode === 'dynamic') {
+                    btnDyn.style.background = 'var(--accent)';
+                    btnDyn.style.color = '#fff';
+                    btnDual.style.background = 'transparent';
+                    btnDual.style.color = 'var(--text-secondary)';
+                } else {
+                    btnDual.style.background = 'var(--accent)';
+                    btnDual.style.color = '#fff';
+                    btnDyn.style.background = 'transparent';
+                    btnDyn.style.color = 'var(--text-secondary)';
+                }
+            }
+            renderPrediction();
+            renderModelMeta();
+        }
+        window.selectModelMode = selectModelMode;
+
+        function renderPrediction() {
+            if (!currentData) return;
+            const p = (activeModelMode === 'dual_stream' && currentData.dual_stream_prediction)
+                ? currentData.dual_stream_prediction
+                : (currentData.dynamic_prediction || currentData.prediction);
+            if (!p) return;
+
+            const probEl = document.getElementById('probValue');
+            const ringEl = document.getElementById('probRingFill');
+            const modelEl = document.getElementById('probModel');
+            const labelEl = document.getElementById('probLabel');
+            const breakdownEl = document.getElementById('dualStreamBreakdown');
+            const disclaimerEl = document.getElementById('probDisclaimerText');
+
+            if (labelEl) {
+                labelEl.textContent = activeModelMode === 'dual_stream'
+                    ? 'Exploratory Dual-Stream Score (80/20 Late Fusion)'
+                    : 'Exploratory dynamic score';
+            }
+
+            if (breakdownEl) {
+                if (activeModelMode === 'dual_stream' && currentData.dual_stream_prediction) {
+                    const ds = currentData.dual_stream_prediction;
+                    breakdownEl.style.display = 'block';
+                    const dynText = ds.dynamic_probability !== null ? (ds.dynamic_probability * 100).toFixed(1) + '%' : '—';
+                    const statText = ds.static_probability !== null ? (ds.static_probability * 100).toFixed(1) + '%' : '—';
+                    document.getElementById('dynCompVal').textContent = dynText;
+                    document.getElementById('statCompVal').textContent = statText;
+                } else {
+                    breakdownEl.style.display = 'none';
+                }
+            }
+
+            if (p.probability !== null && p.probability !== undefined) {
+                const pct = (p.probability * 100).toFixed(1);
+                let displayHtml = pct + '%';
+
+                // If this prediction is flagged as illustrative, append
+                // a visible pill so it is never mistaken for a validated score.
+                if (p.is_illustrative) {
+                    displayHtml += '<span class="illustrative-pill">ILLUSTRATIVE</span>';
+                }
+                probEl.innerHTML = displayHtml;
+
+                // Animate ring — but use neutral grey for illustrative scores
+                const circumference = 2 * Math.PI * 38;
+                const offset = circumference * (1 - p.probability);
+                ringEl.style.strokeDashoffset = offset;
+
+                if (p.is_illustrative) {
+                    // Neutral grey ring so mock scores are not read as risk
+                    ringEl.style.stroke = '#8e93a4';
+                } else {
+                    let ringColor = 'var(--state-near)';
+                    if (p.probability >= 0.5) ringColor = 'var(--state-high)';
+                    else if (p.probability >= 0.25) ringColor = 'var(--state-moderate)';
+                    ringEl.style.stroke = ringColor;
+                }
+            } else {
+                probEl.textContent = '—';
+                ringEl.style.strokeDashoffset = 238.76;
+            }
+
+            let modelInfo = p.model_status || '';
+            if (p.model_type) modelInfo += ' · ' + p.model_type;
+            if (p.oof_roc_auc) modelInfo += ' · OOF ROC-AUC: ' + p.oof_roc_auc;
+            modelEl.textContent = modelInfo;
+
+            if (disclaimerEl && p.disclaimer) {
+                disclaimerEl.innerHTML = p.disclaimer.replace(/\n/g, '<br>');
+            }
+        }
+
+
+        // =====================================================
+        // RENDER: FEATURE IMPORTANCE
+        // =====================================================
+
+        function renderFeatureImportance() {
+            const fi = currentData.feature_importance;
+            if (!fi || fi.length === 0) {
+                document.getElementById('importanceContainer').innerHTML =
+                    '<p style="color:var(--text-muted)">Feature importance data not available.</p>';
+                return;
+            }
+
+            const maxImp = fi[0].importance;
+
+            let html = '';
+            fi.forEach(item => {
+                const width = (item.importance / maxImp * 100).toFixed(1);
+                html += `
+                <div class="importance-row">
+                    <span class="importance-name" title="${item.feature}">${item.feature}</span>
+                    <div class="importance-bar-bg">
+                        <div class="importance-bar" style="width:${width}%"></div>
+                    </div>
+                    <span class="importance-val">${(item.importance * 100).toFixed(1)}%</span>
+                </div>`;
+            });
+
+            document.getElementById('importanceContainer').innerHTML = html;
+
+            // Model-associated signals
+            const top5 = fi.slice(0, 5);
+            let signalsHtml = '<div style="display:flex; flex-wrap:wrap; gap:8px;">';
+            top5.forEach(item => {
+                signalsHtml += `<div style="
+                    background:var(--accent-light);
+                    color:var(--accent);
+                    padding:6px 14px;
+                    border-radius:6px;
+                    font-size:13px;
+                    font-weight:500;
+                ">${item.feature} <span style="opacity:0.6; font-size:11px; margin-left:4px;">associated with model output</span></div>`;
+            });
+            signalsHtml += '</div>';
+            document.getElementById('signalsList').innerHTML = signalsHtml;
+        }
+
+
+        // =====================================================
+        // RENDER: MODEL METADATA
+        // =====================================================
+
+        function renderModelMeta() {
+            if (!currentData) return;
+            const p = (activeModelMode === 'dual_stream' && currentData.dual_stream_prediction)
+                ? currentData.dual_stream_prediction
+                : (currentData.dynamic_prediction || currentData.prediction);
+            const table = document.getElementById('modelMetaTable').querySelector('tbody');
+
+            let rows = [];
+            if (activeModelMode === 'dual_stream') {
+                rows = [
+                    ['Model Architecture', 'Late-Fusion Dual-Stream Ensemble (Experiment 13)'],
+                    ['Stream 1 (Dynamic)', 'Random Forest (42 features, 500 trees) - 80% weight'],
+                    ['Stream 2 (Static)', 'Random Forest (12 clinical features, 500 trees) - 20% weight'],
+                    ['Fusion Formula', '0.80 * Dynamic_RF + 0.20 * Static_RF (Pre-specified exploratory weights)'],
+                    ['Weight Validation', 'Exploratory configuration - weights are NOT clinically validated'],
+                    ['OOF ROC-AUC', p && p.oof_roc_auc ? p.oof_roc_auc.toString() + ' (vs Dynamic 0.657, Static 0.526)' : '—'],
+                    ['Cohort', '139 patients (17 events, 122 non-events)'],
+                    ['Validation Scheme', '5-fold stratified, patient-level cross-validation'],
+                    ['Status', 'Exploratory research prototype - not clinically validated'],
+                ];
+            } else {
+                rows = [
+                    ['Model Type', 'Random Forest (500 trees, balanced class weights)'],
+                    ['Feature Group', 'B_Dynamic — 42 features (Experiment 09 definition)'],
+                    ['Feature Composition', '40 HRV-derived + 2 recording coverage'],
+                    ['Cross-Validation', '5-fold stratified, patient-level'],
+                    ['OOF ROC-AUC', p && p.oof_roc_auc ? p.oof_roc_auc.toString() : '—'],
+                    ['Cohort', '139 patients (17 events, 122 non-events)'],
+                    ['Trajectory Features', 'Not included (did not improve prediction)'],
+                    ['Status', 'Exploratory — not clinically validated'],
+                ];
+            }
+
+            let html = '';
+            rows.forEach(([k, v]) => {
+                html += `<tr><td style="font-weight:500; width:220px;">${k}</td><td>${v}</td></tr>`;
+            });
+
+            table.innerHTML = html;
+        }
+
+
+        // =====================================================
+        // WHAT-IF SIMULATION
+        // =====================================================
+
+        const simInputs = ['sim_HR_bpm', 'sim_SDNN_ms', 'sim_RMSSD_ms', 'sim_pNN50_percent'];
+        simInputs.forEach(id => {
+            const el = document.getElementById(id);
+            const valEl = document.getElementById('val_' + id.replace('sim_', ''));
+            if(el && valEl) {
+                el.addEventListener('input', (e) => {
+                    valEl.textContent = (e.target.value > 0 ? '+' : '') + e.target.value + '%';
+                });
+            }
+        });
+
+        window.resetSimulation = function() {
+            simInputs.forEach(id => {
+                const el = document.getElementById(id);
+                if(el) {
+                    el.value = 0;
+                    document.getElementById('val_' + id.replace('sim_', '')).textContent = '0%';
+                }
+            });
+            document.getElementById('simulationResultsTable').innerHTML = '<tr><td colspan="3" style="text-align: center; color: var(--text-muted);">Run simulation to see results</td></tr>';
+        };
+
+        window.runSimulation = async function() {
+            if (!currentData || !currentData.current_state) return;
+
+            const params = {};
+            simInputs.forEach(id => {
+                const el = document.getElementById(id);
+                if(el) {
+                    params[id.replace('sim_', '')] = parseFloat(el.value);
+                }
+            });
+
+            try {
+                const res = await fetch('/api/simulate/' + currentData.patient_id, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        parameters: params,
+                        observed_state: null
+                    })
+                });
+
+                if (!res.ok) throw new Error('Simulation failed');
+
+                const data = await res.json();
+
+                const table = document.getElementById('simulationResultsTable');
+                let html = '';
+
+                const format = (v) => v !== null && v !== undefined ? parseFloat(v).toFixed(2) : '—';
+
+                ['HR_bpm', 'Mean_RR_ms', 'SDNN_ms', 'RMSSD_ms', 'pNN50_percent'].forEach(feat => {
+                    const orig = data.observed_state.features[feat];
+                    const sim = data.simulated_state.features[feat];
+                    html += `<tr><td>${feat}</td><td style="text-align:right;">${format(orig)}</td><td style="text-align:right; color: ${orig !== sim ? 'var(--accent)' : 'inherit'};">${format(sim)}</td></tr>`;
+                });
+
+                html += `<tr><td style="font-weight: 500;">Twin Deviation</td><td style="text-align:right;">${currentData.current_state.deviation_score.toFixed(2)}</td><td style="text-align:right; font-weight: 500; color: var(--accent);">${data.simulated_state.Twin_State_Deviation.toFixed(2)}</td></tr>`;
+                html += `<tr><td style="font-weight: 500;">State</td><td style="text-align:right;">${currentData.current_state.deviation_level}</td><td style="text-align:right; font-weight: 500; color: var(--accent);">${data.simulated_state.State_Deviation_Level}</td></tr>`;
+
+                table.innerHTML = html;
+
+            } catch(e) {
+                console.error(e);
+            }
+        };
+
+        // =====================================================
+        // CHART OPTIONS HELPER
+        // =====================================================
+
+        function chartOptions(xLabel, yLabel) {
+            return {
+                responsive: true,
+                maintainAspectRatio: false,
+                interaction: {
+                    mode: 'index',
+                    intersect: false,
+                },
+                plugins: {
+                    legend: {
+                        display: true,
+                        position: 'top',
+                        align: 'end',
+                        labels: {
+                            boxWidth: 12,
+                            padding: 12,
+                            font: { family: 'Inter', size: 11 },
+                            usePointStyle: true,
+                        }
+                    },
+                    tooltip: {
+                        backgroundColor: 'rgba(30,36,51,0.95)',
+                        titleFont: { family: 'Inter', size: 12 },
+                        bodyFont: { family: 'Inter', size: 11 },
+                        padding: 10,
+                        cornerRadius: 6,
+                    }
+                },
+                scales: {
+                    x: {
+                        title: {
+                            display: true,
+                            text: xLabel,
+                            font: { family: 'Inter', size: 11, weight: '500' },
+                            color: '#8e93a4',
+                        },
+                        grid: { display: false },
+                        ticks: {
+                            font: { family: 'Inter', size: 10 },
+                            color: '#8e93a4',
+                            maxTicksLimit: 20,
+                        },
+                    },
+                    y: {
+                        title: {
+                            display: true,
+                            text: yLabel,
+                            font: { family: 'Inter', size: 11, weight: '500' },
+                            color: '#8e93a4',
+                        },
+                        grid: {
+                            color: 'rgba(0,0,0,0.04)',
+                        },
+                        ticks: {
+                            font: { family: 'Inter', size: 10 },
+                            color: '#8e93a4',
+                        },
+                    }
+                }
+            };
+        }
+
+
+        // =====================================================
+        // INITIAL LOAD
+        // =====================================================
+
+        loadPatient(patientSelect.value);
+
+    })();
+    </script>
+</body>
+</html>

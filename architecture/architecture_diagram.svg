@@ -1,0 +1,739 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1920 1080" width="1920" height="1080" style="background:#090D16; font-family:-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;">
+  <defs>
+    <!-- Background Gradients -->
+    <linearGradient id="bgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#080C14"/>
+      <stop offset="50%" stop-color="#0D1322"/>
+      <stop offset="100%" stop-color="#090E1A"/>
+    </linearGradient>
+
+    <linearGradient id="stream1Grad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#162032"/>
+      <stop offset="100%" stop-color="#0F172A"/>
+    </linearGradient>
+
+    <linearGradient id="stream2Grad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0D2135"/>
+      <stop offset="100%" stop-color="#081624"/>
+    </linearGradient>
+
+    <linearGradient id="engineGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#1A1430"/>
+      <stop offset="100%" stop-color="#100C20"/>
+    </linearGradient>
+
+    <linearGradient id="simGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#20112C"/>
+      <stop offset="100%" stop-color="#13091B"/>
+    </linearGradient>
+
+    <linearGradient id="dynRfGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0A2D42"/>
+      <stop offset="100%" stop-color="#061A28"/>
+    </linearGradient>
+
+    <linearGradient id="statRfGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#152136"/>
+      <stop offset="100%" stop-color="#0D1624"/>
+    </linearGradient>
+
+    <linearGradient id="fusionGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#281A0B"/>
+      <stop offset="100%" stop-color="#170F06"/>
+    </linearGradient>
+
+    <linearGradient id="defaultOutputGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0284C7"/>
+      <stop offset="100%" stop-color="#0369A1"/>
+    </linearGradient>
+
+    <linearGradient id="demoGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#064E3B"/>
+      <stop offset="100%" stop-color="#022C22"/>
+    </linearGradient>
+
+    <linearGradient id="dashGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#111C30"/>
+      <stop offset="100%" stop-color="#0B1322"/>
+    </linearGradient>
+
+    <!-- Filters & Glows -->
+    <filter id="cardShadow" x="-10%" y="-10%" width="120%" height="120%">
+      <feDropShadow dx="0" dy="5" stdDeviation="6" flood-color="#000000" flood-opacity="0.5"/>
+    </filter>
+
+    <filter id="glowBlueHigh" x="-30%" y="-30%" width="160%" height="160%">
+      <feDropShadow dx="0" dy="0" stdDeviation="8" flood-color="#38BDF8" flood-opacity="0.65"/>
+    </filter>
+
+    <filter id="glowAmber" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="0" stdDeviation="6" flood-color="#F59E0B" flood-opacity="0.4"/>
+    </filter>
+
+    <!-- Arrow Markers -->
+    <marker id="arrCyanBold" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M 0 1 L 9 5 L 0 9 z" fill="#38BDF8"/>
+    </marker>
+    <marker id="arrRoyal" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 1.5 L 9 5 L 0 8.5 z" fill="#60A5FA"/>
+    </marker>
+    <marker id="arrAmber" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 1.5 L 9 5 L 0 8.5 z" fill="#F59E0B"/>
+    </marker>
+    <marker id="arrPurple" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 1.5 L 9 5 L 0 8.5 z" fill="#A78BFA"/>
+    </marker>
+    <marker id="arrGreen" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 1.5 L 9 5 L 0 8.5 z" fill="#34D399"/>
+    </marker>
+  </defs>
+
+  <!-- Base Canvas Background -->
+  <rect width="1920" height="1080" fill="url(#bgGrad)"/>
+
+  <!-- Subtle Architectural Guides -->
+  <g stroke="#1E293B" stroke-width="0.8" opacity="0.25">
+    <line x1="0" y1="96" x2="1920" y2="96"/>
+    <line x1="0" y1="995" x2="1920" y2="995"/>
+    <line x1="455" y1="96" x2="455" y2="995"/>
+    <line x1="930" y1="96" x2="930" y2="995"/>
+    <line x1="1435" y1="96" x2="1435" y2="995"/>
+  </g>
+
+  <!-- ======================================================================= -->
+  <!-- TOP HEADER / BANNER                                                     -->
+  <!-- ======================================================================= -->
+  <g id="Header">
+    <rect x="0" y="0" width="1920" height="96" fill="#0A0F1D" stroke="#1E293B" stroke-width="1.5"/>
+
+    <text x="45" y="40" fill="#F8FAFC" font-size="26" font-weight="800" letter-spacing="-0.4">SHARE Digital Twin: System Architecture &amp; Dual-Stream Pipeline</text>
+    <text x="45" y="71" fill="#94A3B8" font-size="14.5" font-weight="500">
+      Cardiovascular Autonomic Baseline Modeling &amp; Exploratory Event Prediction | PhysioNet SHAREE Cohort (N=139, 17 Confirmed Vascular Events; 12.2% Prevalence)
+    </text>
+
+    <!-- Top Badges -->
+    <g transform="translate(1300, 18)">
+      <rect x="0" y="0" width="175" height="28" rx="14" fill="#1E293B" stroke="#334155" stroke-width="1"/>
+      <circle cx="14" cy="14" r="5" fill="#38BDF8"/>
+      <text x="27" y="19" fill="#E2E8F0" font-size="12" font-weight="600">16:9 Presentation Vector</text>
+
+      <rect x="185" y="0" width="195" height="28" rx="14" fill="#1E293B" stroke="#334155" stroke-width="1"/>
+      <circle cx="199" cy="14" r="5" fill="#10B981"/>
+      <text x="212" y="19" fill="#E2E8F0" font-size="12" font-weight="600">PhysioNet ODC-By v1.0</text>
+
+      <rect x="390" y="0" width="190" height="28" rx="14" fill="#450A0A" stroke="#EF4444" stroke-width="1"/>
+      <circle cx="404" cy="14" r="5" fill="#EF4444"/>
+      <text x="417" y="19" fill="#FECACA" font-size="12" font-weight="700">Research Prototype Only</text>
+    </g>
+
+    <text x="1495" y="72" fill="#64748B" font-size="12" font-weight="500">Not for clinical diagnostic, urgent care, or treatment use</text>
+  </g>
+
+  <!-- ======================================================================= -->
+  <!-- COLUMN 1: DATA INGESTION & REPOSITORY BOUNDARIES                        -->
+  <!-- ======================================================================= -->
+
+  <!-- Outer Red Boundary: .gitignore Distribution Policy (Requirement 2 & 8) -->
+  <g id="RedBoundaryGroup">
+    <rect x="38" y="118" width="398" height="654" rx="12"
+          fill="#450A0A" fill-opacity="0.08"
+          stroke="#EF4444" stroke-width="2.2" stroke-dasharray="7,5"/>
+
+    <!-- Boundary Label (EXACT USER SPECIFICATION) -->
+    <rect x="48" y="106" width="378" height="26" rx="6" fill="#991B1B" stroke="#EF4444" stroke-width="1"/>
+    <text x="56" y="123" fill="#FEF2F2" font-size="11.5" font-weight="800" letter-spacing="0.2">
+      Files excluded from intended public repository by .gitignore
+    </text>
+
+    <!-- Clear Policy Clarification -->
+    <text x="50" y="145" fill="#FCA5A5" font-size="9.5" font-weight="600">
+      *.gitignore exclusion policy for repo distribution; does not guarantee
+    </text>
+    <text x="50" y="157" fill="#FCA5A5" font-size="9.5" font-weight="600">
+      privacy or imply audited publication history.
+    </text>
+
+    <!-- STREAM 1 CARD: Static Historical / Clinical Data -->
+    <g id="Stream1Card" transform="translate(50, 168)">
+      <rect width="374" height="186" rx="10" fill="url(#stream1Grad)" stroke="#3B82F6" stroke-width="1.6" filter="url(#cardShadow)"/>
+
+      <rect x="0" y="0" width="374" height="34" rx="10" fill="#1E3A8A" fill-opacity="0.5"/>
+      <text x="14" y="22" fill="#93C5FD" font-size="13" font-weight="700">Stream 1: Static Historical / Clinical Data</text>
+      <rect x="287" y="7" width="75" height="20" rx="10" fill="#1D4ED8"/>
+      <text x="297" y="21" fill="#FFFFFF" font-size="10.5" font-weight="700">12 Features</text>
+
+      <text x="14" y="52" fill="#CBD5E1" font-size="11" font-weight="600">Patient Baseline Intake &amp; Echo Records (info.txt)</text>
+
+      <g fill="#94A3B8" font-size="10.5">
+        <text x="14" y="73"><tspan fill="#60A5FA" font-weight="bold">• Demographics:</tspan> Age, Sex, Weight, Height, BSA, BMI, Smoker</text>
+        <text x="14" y="92"><tspan fill="#60A5FA" font-weight="bold">• Hemodynamics:</tspan> Systolic BP, Diastolic BP (mmHg)</text>
+        <text x="14" y="111"><tspan fill="#60A5FA" font-weight="bold">• Morphology:</tspan> IMT MAX, LVMI (g/m²), Ejection Fraction (EF%)</text>
+      </g>
+
+      <rect x="14" y="125" width="346" height="46" rx="6" fill="#0B1329" stroke="#1E293B" stroke-width="1"/>
+      <text x="22" y="143" fill="#F87171" font-size="10.5" font-weight="700">Excluded Local File: share_static_cohort.csv</text>
+      <text x="22" y="159" fill="#94A3B8" font-size="10">139 patient records × 12 clinical columns | Input to Static RF</text>
+    </g>
+
+    <!-- STREAM 2 CARD: Dynamic Physiological Time-Series (PART OF PRIMARY SPINE) -->
+    <g id="Stream2Card" transform="translate(50, 368)">
+      <rect width="374" height="358" rx="10" fill="url(#stream2Grad)" stroke="#0284C7" stroke-width="2" filter="url(#cardShadow)"/>
+
+      <rect x="0" y="0" width="374" height="34" rx="10" fill="#0369A1" fill-opacity="0.5"/>
+      <text x="14" y="22" fill="#7DD3FC" font-size="13" font-weight="700">Stream 2: Dynamic HRV Time-Series</text>
+      <rect x="287" y="7" width="75" height="20" rx="10" fill="#0284C7"/>
+      <text x="297" y="21" fill="#FFFFFF" font-size="10.5" font-weight="700">42 Features</text>
+
+      <text x="14" y="52" fill="#CBD5E1" font-size="11" font-weight="600">24h Ambulatory Holter ECG (128 Hz, 3 Leads, QRS)</text>
+
+      <!-- 15-min Epoch Windows -->
+      <rect x="14" y="64" width="346" height="74" rx="6" fill="#061A2B" stroke="#0E3754" stroke-width="1"/>
+      <text x="22" y="83" fill="#38BDF8" font-size="11" font-weight="700">15-Minute Epoch Windowing (Non-Overlapping)</text>
+      <text x="22" y="100" fill="#E2E8F0" font-size="10.5">5 HRV Markers: HR (bpm), Mean RR (ms), SDNN, RMSSD, pNN50</text>
+      <text x="22" y="117" fill="#0284C7" font-size="10.5" font-weight="700">→ 12,587 Windowed States across cohort (share_cohort_twin_states.csv)</text>
+
+      <!-- 24h Summary Features -->
+      <text x="14" y="156" fill="#E2E8F0" font-size="11" font-weight="700">24-Hour Summary Extraction (42 Dynamic Features):</text>
+      <text x="14" y="174" fill="#94A3B8" font-size="10.5">• 8 stats per marker: Mean, Std, Min, Max, Median, First,</text>
+      <text x="14" y="190" fill="#94A3B8" font-size="10.5">  Last, Change (5 × 8 = 40) + Valid Windows + Hours</text>
+
+      <!-- Excluded files breakdown -->
+      <rect x="14" y="204" width="346" height="106" rx="6" fill="#0B1329" stroke="#1E293B" stroke-width="1"/>
+      <text x="22" y="221" fill="#F87171" font-size="10.5" font-weight="700">Excluded Local Raw &amp; Derived Files:</text>
+      <text x="22" y="238" fill="#E2E8F0" font-size="10">• share_data/*.dat, *.hea, *.qrs (~4.1 GB Holter waveforms)</text>
+      <text x="22" y="254" fill="#E2E8F0" font-size="10">• share_patient_level_dataset.csv (42 dynamic features)</text>
+      <text x="22" y="270" fill="#FCA5A5" font-size="10">• *oof_predictions.csv (Contains true patient event labels)</text>
+      <text x="22" y="286" fill="#FCA5A5" font-size="10">• *.joblib (Quarantined trained model checkpoints)</text>
+
+      <text x="14" y="325" fill="#F87171" font-size="9.5" font-weight="700">
+        [Quarantined by .gitignore: Excluded from public repository]
+      </text>
+    </g>
+  </g>
+
+  <!-- PARALLEL PUBLIC ALTERNATIVE: Synthetic Demo Cohort (Requirement 6) -->
+  <g id="PublicDemoCard" transform="translate(38, 790)">
+    <rect width="398" height="186" rx="10" fill="url(#demoGrad)" stroke="#10B981" stroke-width="1.8" filter="url(#cardShadow)"/>
+
+    <rect x="0" y="0" width="398" height="34" rx="10" fill="#065F46" fill-opacity="0.6"/>
+    <text x="14" y="22" fill="#6EE7B7" font-size="13" font-weight="700">Public Bundled Alternative: Synthetic Cohort</text>
+    <rect x="310" y="7" width="75" height="20" rx="10" fill="#059669"/>
+    <text x="320" y="21" fill="#FFFFFF" font-size="10.5" font-weight="700">Public Git</text>
+
+    <text x="14" y="52" fill="#ECFDF5" font-size="11" font-weight="600">Zero-Credential Evaluation Safeguard (demo_data/)</text>
+    <text x="14" y="72" fill="#A7F3D0" font-size="10.5">• Pre-generated demo patients: DEMO-001, DEMO-002, DEMO-003</text>
+    <text x="14" y="90" fill="#A7F3D0" font-size="10.5">• Generated via generate_synthetic_demo.py (Fixed Seed)</text>
+    <text x="14" y="108" fill="#A7F3D0" font-size="10.5">• Zero overlap with PhysioNet SHAREE records; all labels=0</text>
+    <text x="14" y="126" fill="#A7F3D0" font-size="10.5">• Runs out-of-the-box from a clean clone without real data</text>
+
+    <rect x="14" y="138" width="370" height="34" rx="6" fill="#022C22" stroke="#059669" stroke-width="1"/>
+    <text x="24" y="159" fill="#34D399" font-size="11" font-weight="700">CLI Launch: python experiment_11_dashboard.py --demo</text>
+  </g>
+
+  <!-- ======================================================================= -->
+  <!-- COLUMN 2: DIGITAL TWIN STATE ENGINE & WHAT-IF SIMULATOR                 -->
+  <!-- ======================================================================= -->
+  <g id="Column2_Engines" transform="translate(475, 130)">
+
+    <!-- TWIN STATE ENGINE CARD -->
+    <g id="TwinStateEngineCard">
+      <rect width="435" height="400" rx="12" fill="url(#engineGrad)" stroke="#8B5CF6" stroke-width="1.8" filter="url(#cardShadow)"/>
+
+      <rect x="0" y="0" width="435" height="38" rx="12" fill="#5B21B6" fill-opacity="0.4"/>
+      <text x="16" y="25" fill="#C4B5FD" font-size="15" font-weight="700">Twin State Engine (twin_state_engine.py)</text>
+      <rect x="335" y="8" width="85" height="22" rx="11" fill="#7C3AED"/>
+      <text x="344" y="23" fill="#FFFFFF" font-size="10.5" font-weight="700">Personalized</text>
+
+      <text x="16" y="60" fill="#E2E8F0" font-size="12" font-weight="700">1. Individual Autonomic Baseline Calibration</text>
+      <text x="16" y="78" fill="#94A3B8" font-size="10.5">• Calculates personalized median baseline across patient's 24h recording</text>
+      <text x="16" y="93" fill="#94A3B8" font-size="10.5">• Avoids misclassifications from arbitrary population-level cutoffs</text>
+
+      <!-- MAD Formula -->
+      <rect x="16" y="106" width="403" height="78" rx="8" fill="#120D24" stroke="#4C1D95" stroke-width="1.2"/>
+      <text x="24" y="125" fill="#A78BFA" font-size="11" font-weight="700">2. Outlier-Robust Scaling: Median Absolute Deviation (MAD)</text>
+      <text x="24" y="148" fill="#F8FAFC" font-size="13.5" font-family="'Courier New', Courier, monospace" font-weight="bold">
+        Robust Z-Score_i = (x_i - Median) / (1.4826 × MAD)
+      </text>
+      <text x="24" y="168" fill="#C4B5FD" font-size="10">
+        Resistant to Holter recording noise artifacts &amp; ectopic beats
+      </text>
+
+      <!-- Composite State Deviation -->
+      <rect x="16" y="192" width="403" height="72" rx="8" fill="#120D24" stroke="#4C1D95" stroke-width="1.2"/>
+      <text x="24" y="211" fill="#A78BFA" font-size="11" font-weight="700">3. Multi-Scale Twin State Deviation Metric</text>
+      <text x="24" y="233" fill="#F8FAFC" font-size="13.5" font-family="'Courier New', Courier, monospace" font-weight="bold">
+        State Deviation = (1/5) × Σ |Robust Z-Score_i|
+      </text>
+      <text x="24" y="251" fill="#C4B5FD" font-size="10">
+        Computed across 5 markers: HR, Mean RR, SDNN, RMSSD, pNN50
+      </text>
+
+      <!-- Stability Bands -->
+      <text x="16" y="284" fill="#E2E8F0" font-size="11.5" font-weight="700">4. Engineering Stability Bands (Non-Diagnostic):</text>
+
+      <g transform="translate(16, 292)">
+        <rect x="0" y="0" width="128" height="42" rx="6" fill="#064E3B" stroke="#059669" stroke-width="1"/>
+        <text x="10" y="18" fill="#34D399" font-size="10.5" font-weight="700">Near Baseline</text>
+        <text x="10" y="32" fill="#D1FAE5" font-size="10">Deviation &lt; 1.0</text>
+
+        <rect x="138" y="0" width="128" height="42" rx="6" fill="#78350F" stroke="#D97706" stroke-width="1"/>
+        <text x="148" y="18" fill="#FBBF24" font-size="10.5" font-weight="700">Moderate Shift</text>
+        <text x="148" y="32" fill="#FEF3C7" font-size="10">1.0 ≤ Dev &lt; 2.0</text>
+
+        <rect x="276" y="0" width="127" height="42" rx="6" fill="#7F1D1D" stroke="#DC2626" stroke-width="1"/>
+        <text x="286" y="18" fill="#F87171" font-size="10.5" font-weight="700">High Deviation</text>
+        <text x="286" y="32" fill="#FEE2E2" font-size="10">Deviation ≥ 2.0</text>
+      </g>
+
+      <rect x="16" y="344" width="403" height="42" rx="6" fill="#1C1033" stroke="#581C87" stroke-width="1"/>
+      <text x="24" y="361" fill="#DDD6FE" font-size="10" font-weight="600">
+        • Measures mathematical deviation from personal diurnal median.
+      </text>
+      <text x="24" y="375" fill="#DDD6FE" font-size="10" font-weight="600">
+        • Does not denote clinical severity or immediate cardiovascular risk.
+      </text>
+    </g>
+
+    <!-- WHAT-IF SIMULATOR CARD (Requirement 5: Zero connection to RF models) -->
+    <g id="WhatIfSimulatorCard" transform="translate(0, 440)">
+      <rect width="435" height="405" rx="12" fill="url(#simGrad)" stroke="#C084FC" stroke-width="1.8" filter="url(#cardShadow)"/>
+
+      <rect x="0" y="0" width="435" height="38" rx="12" fill="#701A75" fill-opacity="0.4"/>
+      <text x="16" y="25" fill="#F0ABFC" font-size="15" font-weight="700">What-If Simulator (what_if_simulator.py)</text>
+      <rect x="330" y="8" width="90" height="22" rx="11" fill="#A21CAF"/>
+      <text x="340" y="23" fill="#FFFFFF" font-size="10.5" font-weight="700">Perturbation</text>
+
+      <text x="16" y="60" fill="#E2E8F0" font-size="12" font-weight="700">Bounded Mathematical Perturbation Engine</text>
+      <text x="16" y="77" fill="#94A3B8" font-size="10.5">• Evaluates hypothetical physiological state shifts interactively</text>
+
+      <!-- Bounds -->
+      <rect x="16" y="88" width="403" height="84" rx="8" fill="#190B24" stroke="#581C87" stroke-width="1.2"/>
+      <text x="24" y="107" fill="#E879F9" font-size="11" font-weight="700">Hard Parameter Validation Bounds:</text>
+      <text x="24" y="125" fill="#E2E8F0" font-size="10">• Heart Rate Adjustment: <tspan fill="#F472B6" font-weight="bold">±10% max</tspan> (physiological bound)</text>
+      <text x="24" y="142" fill="#E2E8F0" font-size="10">• SDNN / RMSSD / pNN50: <tspan fill="#F472B6" font-weight="bold">±20% max</tspan></text>
+      <text x="24" y="159" fill="#94A3B8" font-size="9.5">• Strictly immutable baseline: Patient median is never altered</text>
+
+      <!-- Reciprocal coupling -->
+      <rect x="16" y="180" width="403" height="74" rx="8" fill="#190B24" stroke="#581C87" stroke-width="1.2"/>
+      <text x="24" y="199" fill="#E879F9" font-size="11" font-weight="700">Reciprocal Electrophysiological Coupling Formula:</text>
+      <text x="24" y="222" fill="#F8FAFC" font-size="14" font-family="'Courier New', Courier, monospace" font-weight="bold">
+        Mean_RR_ms = 60,000 / HR_bpm
+      </text>
+      <text x="24" y="241" fill="#C4B5FD" font-size="9.5">
+        Preserves electrophysiological consistency upon heart rate shifts
+      </text>
+
+      <!-- Output Behavior & Scientific Disclaimers -->
+      <rect x="16" y="262" width="403" height="128" rx="8" fill="#2E082A" stroke="#C026D3" stroke-width="1.2"/>
+      <text x="24" y="281" fill="#FDF4FF" font-size="11" font-weight="700">Simulation Output &amp; Strict Non-Causal Boundaries:</text>
+      <text x="24" y="300" fill="#F5D0FE" font-size="10">✓ Instantly recomputes robust z-scores &amp; state deviation</text>
+      <text x="24" y="317" fill="#F5D0FE" font-size="10">✓ Visualizes counterfactual stability deltas on UI radar</text>
+      <text x="24" y="337" fill="#FDA4AF" font-size="10" font-weight="bold">✗ Refuses fabricated clinical risk predictions or probabilities</text>
+      <text x="24" y="354" fill="#FDA4AF" font-size="10" font-weight="bold">✗ Non-causal: Does not simulate drug therapy or interventions</text>
+      <text x="24" y="371" fill="#FECDD3" font-size="9.5">   (Isolated from ML models; verified by 10/10 automated tests)</text>
+    </g>
+
+  </g>
+
+  <!-- ======================================================================= -->
+  <!-- COLUMN 3: MACHINE LEARNING PIPELINES & OPTIONAL LATE FUSION             -->
+  <!-- ======================================================================= -->
+  <g id="Column3_MachineLearning" transform="translate(940, 130)">
+
+    <rect width="475" height="850" rx="14" fill="#0C1424" stroke="#334155" stroke-width="1.6"/>
+
+    <!-- Header with Cohort Warning -->
+    <rect x="0" y="0" width="475" height="52" rx="14" fill="#1E293B" stroke="#334155" stroke-width="1"/>
+    <text x="18" y="24" fill="#F1F5F9" font-size="15" font-weight="800">Exploratory Machine Learning Pipelines</text>
+    <text x="18" y="42" fill="#94A3B8" font-size="10.5" font-weight="600">
+      5-Fold Stratified Patient CV | Cohort N=139, 17 Events (12.2% Prevalence)
+    </text>
+
+    <!-- DYNAMIC RANDOM FOREST CARD: PRIMARY MODEL (PROMINENT VIBRANT SPINE) -->
+    <g id="DynamicRfCard" transform="translate(18, 64)">
+      <rect width="439" height="216" rx="10" fill="url(#dynRfGrad)" stroke="#38BDF8" stroke-width="2.5" filter="url(#glowBlueHigh)"/>
+
+      <rect x="0" y="0" width="439" height="36" rx="10" fill="#0284C7" fill-opacity="0.5"/>
+      <text x="14" y="23" fill="#E0F2FE" font-size="13.5" font-weight="800">Dynamic Random Forest (Exp 11)</text>
+      <rect x="315" y="7" width="112" height="22" rx="11" fill="#0284C7"/>
+      <text x="323" y="22" fill="#FFFFFF" font-size="10.5" font-weight="800">PRIMARY MODEL</text>
+
+      <text x="14" y="56" fill="#BAE6FD" font-size="12" font-weight="700">Input: 42 Dynamic 24h Summary Features</text>
+      <text x="14" y="73" fill="#94A3B8" font-size="10.5">500 trees | class_weight='balanced' | Stratified 5-Fold CV</text>
+
+      <!-- Benchmark Metrics (Prominent) -->
+      <g transform="translate(14, 84)">
+        <rect width="411" height="68" rx="6" fill="#031F33" stroke="#0284C7" stroke-width="1.2"/>
+        <text x="12" y="20" fill="#7DD3FC" font-size="10" font-weight="700">VERIFIED OUT-OF-FOLD (OOF) BENCHMARK METRICS:</text>
+        <text x="12" y="43" fill="#F8FAFC" font-size="15" font-weight="900">
+          OOF ROC-AUC: <tspan fill="#38BDF8">0.657</tspan> (0.6572) | OOF AP: <tspan fill="#38BDF8">0.259</tspan> (0.2590)
+        </text>
+        <text x="12" y="60" fill="#BAE6FD" font-size="10">
+          Mean Fold ROC-AUC: 0.699 ± 0.163 | AP vs. baseline prevalence: 0.259 vs 0.122
+        </text>
+      </g>
+
+      <!-- Primary Pipeline Flow Badge -->
+      <rect x="14" y="160" width="411" height="44" rx="6" fill="#082F49" stroke="#38BDF8" stroke-width="1.4"/>
+      <text x="22" y="180" fill="#38BDF8" font-size="12" font-weight="800">
+        Primary Pipeline Flow → P_dynamic (Default Output)
+      </text>
+      <text x="22" y="196" fill="#BAE6FD" font-size="10">
+        Pure 100% dynamic signal | Zero static weighting applied
+      </text>
+    </g>
+
+    <!-- STATIC CLINICAL MODEL CARD (EXP 13) -->
+    <g id="StaticRfCard" transform="translate(18, 292)">
+      <rect width="439" height="110" rx="10" fill="url(#statRfGrad)" stroke="#3B82F6" stroke-width="1.4"/>
+
+      <rect x="0" y="0" width="439" height="28" rx="10" fill="#1E3A8A" fill-opacity="0.4"/>
+      <text x="14" y="19" fill="#93C5FD" font-size="12.5" font-weight="700">Static Clinical RF (Exp 13 Model)</text>
+      <rect x="340" y="5" width="85" height="18" rx="9" fill="#1D4ED8"/>
+      <text x="348" y="17" fill="#FFFFFF" font-size="9.5" font-weight="700">12 Features</text>
+
+      <text x="14" y="46" fill="#E2E8F0" font-size="10.5">Demographics, Blood Pressure, LVMI, Ejection Fraction</text>
+      <text x="14" y="65" fill="#F8FAFC" font-size="12.5" font-weight="700">
+        OOF ROC-AUC: <tspan fill="#60A5FA">0.526</tspan> | OOF AP: <tspan fill="#60A5FA">0.137</tspan> | Mean Fold: 0.561 ± 0.152
+      </text>
+      <text x="14" y="83" fill="#94A3B8" font-size="9.5">
+        Static markers alone exhibit near-chance discriminative power
+      </text>
+      <text x="14" y="98" fill="#93C5FD" font-size="10" font-weight="600">
+        Feeds exclusively into the Optional Late Fusion Box below
+      </text>
+    </g>
+
+    <!-- EARLY FUSION COMPARISON BADGE -->
+    <g id="EarlyFusionBadge" transform="translate(18, 412)">
+      <rect width="439" height="32" rx="6" fill="#1E293B" stroke="#475569" stroke-width="1"/>
+      <text x="14" y="14" fill="#94A3B8" font-size="9.5" font-weight="700">Early Fusion Concatenation Comparison (54 features):</text>
+      <text x="14" y="26" fill="#CBD5E1" font-size="9.5">
+        Concatenated RF OOF ROC-AUC: 0.647 | OOF AP: 0.232 (Underperforms dynamic-only)
+      </text>
+    </g>
+
+    <!-- =================================================================== -->
+    <!-- OPTIONAL LATE FUSION BOX (Requirement 4: 80/20 weights ONLY here)   -->
+    <!-- =================================================================== -->
+    <g id="OptionalLateFusionBox" transform="translate(18, 454)">
+      <rect width="439" height="382" rx="12" fill="url(#fusionGrad)" stroke="#F59E0B" stroke-width="2.2" stroke-dasharray="6,4" filter="url(#glowAmber)"/>
+
+      <!-- Header Badge -->
+      <rect x="0" y="0" width="439" height="36" rx="12" fill="#B45309" fill-opacity="0.4"/>
+      <text x="14" y="23" fill="#FDE68A" font-size="13.5" font-weight="800">
+        Optional Late Fusion Box (Dual-Stream Blend)
+      </text>
+      <rect x="320" y="7" width="105" height="22" rx="11" fill="#D97706"/>
+      <text x="328" y="22" fill="#FFFFFF" font-size="10" font-weight="800">OPTIONAL MODE</text>
+
+      <!-- 80/20 WEIGHTING FORMULA (SHOWN STRICTLY & EXCLUSIVELY INSIDE THIS BOX) -->
+      <rect x="14" y="48" width="411" height="84" rx="8" fill="#1B1207" stroke="#D97706" stroke-width="1.4"/>
+      <text x="24" y="70" fill="#FBBF24" font-size="12" font-weight="800">
+        80% Dynamic + 20% Static Prior Weighting Formula:
+      </text>
+      <text x="24" y="99" fill="#FFFBEB" font-size="15" font-family="'Courier New', Courier, monospace" font-weight="bold">
+        P_fusion = 0.80 × P_dynamic + 0.20 × P_static
+      </text>
+      <text x="24" y="120" fill="#FDE68A" font-size="10.5" font-weight="600">
+        Pre-specified empirical prior blend (Experiment 13)
+      </text>
+
+      <!-- Late Fusion Benchmark Metrics -->
+      <g transform="translate(14, 142)">
+        <rect width="411" height="60" rx="6" fill="#241708" stroke="#B45309" stroke-width="1"/>
+        <text x="12" y="20" fill="#FCD34D" font-size="10.5" font-weight="700">EVALUATION BENCHMARK METRICS (5-FOLD STRATIFIED CV):</text>
+        <text x="12" y="41" fill="#F8FAFC" font-size="14.5" font-weight="900">
+          OOF ROC-AUC: <tspan fill="#FBBF24">0.655</tspan> (0.6553) | OOF AP: <tspan fill="#FBBF24">0.252</tspan> (0.2522)
+        </text>
+        <text x="12" y="54" fill="#D97706" font-size="9.5">Mean Fold ROC-AUC: 0.689 ± 0.165 | AP vs baseline: 0.252 vs 0.122</text>
+      </g>
+
+      <!-- Scientific Clarification Notes -->
+      <g fill="#FDE68A" font-size="10" transform="translate(14, 214)">
+        <text x="0" y="14">• <tspan font-weight="bold">Why 80/20?</tspan> Empirical engineering prior acknowledging that</text>
+        <text x="0" y="30">  dynamic HRV carries substantially higher predictive signal</text>
+        <text x="0" y="46">  (AUC 0.657) than static clinical markers alone (AUC 0.526).</text>
+        <text x="0" y="66" fill="#FCA5A5" font-weight="bold">• Non-Validation Notice: Weighting is an investigational heuristic</text>
+        <text x="0" y="82" fill="#FCA5A5">  and is NOT clinically validated, guideline-endorsed, or FDA-cleared.</text>
+        <text x="0" y="102" fill="#BAE6FD" font-weight="bold">• Only activated when query ?mode=dual_stream is requested.</text>
+        <text x="0" y="122" fill="#38BDF8" font-weight="bold">• Default predictions use NO static weighting (P_dynamic pure).</text>
+      </g>
+
+      <!-- Output connector badge -->
+      <rect x="14" y="346" width="411" height="26" rx="4" fill="#381E04" stroke="#D97706" stroke-width="1"/>
+      <text x="24" y="363" fill="#FDE68A" font-size="10.5" font-weight="700">
+        Outputs P_fusion → Activates Dual-Stream mode on Clinician Dashboard
+      </text>
+    </g>
+
+  </g>
+
+  <!-- ======================================================================= -->
+  <!-- COLUMN 4: INFERENCE OUTPUTS & CLINICIAN DASHBOARD                       -->
+  <!-- ======================================================================= -->
+  <g id="Column4_Dashboard" transform="translate(1445, 130)">
+
+    <!-- OUTPUT BOX 1: DEFAULT PREDICTION (PRIMARY DEFAULT OUTPUT - PROMINENT GLOW) -->
+    <g id="DefaultOutputCard">
+      <rect width="430" height="150" rx="12" fill="url(#defaultOutputGrad)" stroke="#38BDF8" stroke-width="2.8" filter="url(#glowBlueHigh)"/>
+
+      <!-- Top Banner -->
+      <rect x="0" y="0" width="430" height="36" rx="12" fill="#0369A1"/>
+      <rect x="295" y="6" width="125" height="24" rx="12" fill="#0284C7"/>
+      <text x="306" y="22" fill="#FFFFFF" font-size="11" font-weight="800">DEFAULT OUTPUT</text>
+
+      <!-- Exact Required Label -->
+      <text x="16" y="26" fill="#FFFFFF" font-size="16" font-weight="900" letter-spacing="-0.3">
+        P_dynamic — Default prediction
+      </text>
+
+      <g transform="translate(16, 46)">
+        <text x="0" y="16" fill="#F0F9FF" font-size="12.5" font-weight="800">
+          Single-Stream Dynamic Random Forest Inference
+        </text>
+        <text x="0" y="35" fill="#E0F2FE" font-size="10.5">
+          • Derived purely from 42 dynamic HRV summary features
+        </text>
+        <text x="0" y="53" fill="#E0F2FE" font-size="10.5">
+          • <tspan font-weight="bold">Zero static weighting applied</tspan> (No 80% weight implied)
+        </text>
+        <text x="0" y="71" fill="#E0F2FE" font-size="10.5">
+          • Verified Benchmark Performance: <tspan font-weight="bold">OOF ROC-AUC 0.657</tspan>
+        </text>
+        <text x="0" y="90" fill="#BAE6FD" font-size="11" font-weight="700">
+          • Default API contract: /api/patient/&lt;id&gt; (active_mode: "dynamic")
+        </text>
+      </g>
+    </g>
+
+    <!-- OUTPUT BOX 2: OPTIONAL DUAL-STREAM PREDICTION -->
+    <g id="OptionalOutputCard" transform="translate(0, 162)">
+      <rect width="430" height="100" rx="10" fill="#241607" stroke="#F59E0B" stroke-width="1.8" stroke-dasharray="5,4"/>
+
+      <rect x="0" y="0" width="430" height="28" rx="10" fill="#78350F" fill-opacity="0.4"/>
+      <text x="16" y="19" fill="#FDE68A" font-size="12.5" font-weight="800">
+        P_fusion — Optional Dual-Stream Prediction
+      </text>
+      <rect x="320" y="5" width="95" height="18" rx="9" fill="#B45309"/>
+      <text x="330" y="17" fill="#FFFFFF" font-size="9.5" font-weight="700">OPTIONAL</text>
+
+      <g transform="translate(16, 36)">
+        <text x="0" y="14" fill="#FEF3C7" font-size="10.5">
+          • Output of Late Fusion Box: 0.80 × P_dynamic + 0.20 × P_static
+        </text>
+        <text x="0" y="31" fill="#FEF3C7" font-size="10.5">
+          • Activated exclusively via query: <tspan font-family="Courier, monospace" font-weight="bold">?mode=dual_stream</tspan>
+        </text>
+        <text x="0" y="48" fill="#FCD34D" font-size="10">
+          • Verified OOF ROC-AUC: 0.655 | Displays both stream contributions
+        </text>
+      </g>
+    </g>
+
+    <!-- CLINICIAN DASHBOARD APPLICATION CARD -->
+    <g id="DashboardUiCard" transform="translate(0, 274)">
+      <rect width="430" height="576" rx="14" fill="url(#dashGrad)" stroke="#475569" stroke-width="1.8" filter="url(#cardShadow)"/>
+
+      <!-- Card Banner -->
+      <rect x="0" y="0" width="430" height="42" rx="14" fill="#1E293B" stroke="#334155" stroke-width="1"/>
+      <text x="16" y="21" fill="#F8FAFC" font-size="14.5" font-weight="800">
+        Clinician Dashboard
+      </text>
+      <text x="16" y="35" fill="#94A3B8" font-size="10" font-weight="500">
+        experiment_11_dashboard.py | Flask REST API &amp; Web UI
+      </text>
+      <rect x="330" y="10" width="85" height="22" rx="11" fill="#3B82F6"/>
+      <text x="342" y="25" fill="#FFFFFF" font-size="10" font-weight="700">Flask :5000</text>
+
+      <!-- Dual Execution Mode Switch -->
+      <g transform="translate(16, 52)">
+        <rect width="398" height="48" rx="6" fill="#0B132B" stroke="#1D4ED8" stroke-width="1"/>
+        <text x="12" y="19" fill="#60A5FA" font-size="10" font-weight="800">DUAL EXECUTION ARCHITECTURE:</text>
+        <text x="12" y="35" fill="#CBD5E1" font-size="9.5">
+          • Live Research Mode: python experiment_11_dashboard.py
+        </text>
+        <text x="12" y="47" fill="#34D399" font-size="9.5" font-weight="700">
+          • Zero-Credential Demo: python experiment_11_dashboard.py --demo
+        </text>
+      </g>
+
+      <!-- 5 Interactive Dashboard Tabs -->
+      <text x="16" y="120" fill="#E2E8F0" font-size="11" font-weight="800">Interactive User Interface Tabs (templates/dashboard.html):</text>
+
+      <g transform="translate(16, 128)" font-size="10">
+        <!-- Tab 1 -->
+        <rect x="0" y="0" width="398" height="38" rx="6" fill="#0F172A" stroke="#334155" stroke-width="1"/>
+        <text x="12" y="16" fill="#38BDF8" font-weight="700">Tab 1: Patient Overview &amp; Static Profile</text>
+        <text x="12" y="30" fill="#94A3B8">Baseline demographics, blood pressure, BMI, LVMI, and ejection fraction</text>
+
+        <!-- Tab 2 -->
+        <rect x="0" y="44" width="398" height="38" rx="6" fill="#0F172A" stroke="#334155" stroke-width="1"/>
+        <text x="12" y="60" fill="#818CF8" font-weight="700">Tab 2: Twin State &amp; Baseline Radar</text>
+        <text x="12" y="74" fill="#94A3B8">MAD-scaled robust z-score radar chart + multi-scale deviation meter</text>
+
+        <!-- Tab 3 -->
+        <rect x="0" y="88" width="398" height="38" rx="6" fill="#0F172A" stroke="#334155" stroke-width="1"/>
+        <text x="12" y="104" fill="#2DD4BF" font-weight="700">Tab 3: 24h Trajectory Timeline</text>
+        <text x="12" y="118" fill="#94A3B8">Time-series of 15-min windows, diurnal trends &amp; anomalous epoch alerts</text>
+
+        <!-- Tab 4 -->
+        <rect x="0" y="132" width="398" height="38" rx="6" fill="#0F172A" stroke="#334155" stroke-width="1"/>
+        <text x="12" y="148" fill="#FBBF24" font-weight="700">Tab 4: Model Explanation &amp; Feature Importances</text>
+        <text x="12" y="162" fill="#94A3B8">Gini &amp; permutation rankings (SDNN change, RMSSD max, Mean RR)</text>
+
+        <!-- Tab 5 -->
+        <rect x="0" y="176" width="398" height="38" rx="6" fill="#0F172A" stroke="#334155" stroke-width="1"/>
+        <text x="12" y="192" fill="#F472B6" font-weight="700">Tab 5: Counterfactual What-If Simulator</text>
+        <text x="12" y="206" fill="#94A3B8">Interactive perturbation sliders (HR, SDNN, RMSSD) with live recomputation</text>
+      </g>
+
+      <!-- REST API Endpoints -->
+      <g transform="translate(16, 362)">
+        <rect width="398" height="74" rx="6" fill="#090E1A" stroke="#1E293B" stroke-width="1"/>
+        <text x="12" y="18" fill="#A5B4FC" font-size="10" font-weight="700">REST API CONTRACTS &amp; ENDPOINTS:</text>
+        <text x="12" y="35" fill="#E2E8F0" font-size="9.5" font-family="Courier, monospace">
+          GET  /api/patient/&lt;id&gt;            → Default P_dynamic
+        </text>
+        <text x="12" y="51" fill="#E2E8F0" font-size="9.5" font-family="Courier, monospace">
+          GET  /api/patient/&lt;id&gt;?mode=dual_stream → P_fusion (80/20)
+        </text>
+        <text x="12" y="67" fill="#E2E8F0" font-size="9.5" font-family="Courier, monospace">
+          POST /api/simulate                → Recomputed Z-scores
+        </text>
+      </g>
+
+      <!-- Disclaimers Badge -->
+      <g transform="translate(16, 448)">
+        <rect width="398" height="114" rx="6" fill="#3B0707" stroke="#EF4444" stroke-width="1"/>
+        <text x="12" y="18" fill="#FCA5A5" font-size="10" font-weight="800">
+          MANDATORY UI ETHICAL &amp; SCIENTIFIC DISCLAIMERS:
+        </text>
+        <text x="12" y="34" fill="#FECACA" font-size="9.5">
+          • Prominently surfaces 17/139 event imbalance warning across tabs
+        </text>
+        <text x="12" y="50" fill="#FECACA" font-size="9.5">
+          • Explains that Twin Deviation is an engineering stability score
+        </text>
+        <text x="12" y="66" fill="#FECACA" font-size="9.5">
+          • Discloses absence of external cohort validation
+        </text>
+        <text x="12" y="82" fill="#FECACA" font-size="9.5">
+          • In demo mode without .joblib: displays labeled placeholder UI scores
+        </text>
+        <text x="12" y="100" fill="#FCA5A5" font-size="9.5" font-weight="bold">
+          • Explicitly disclaims medical device status or clinical diagnostic use
+        </text>
+      </g>
+    </g>
+
+  </g>
+
+  <!-- ======================================================================= -->
+  <!-- COLLISION-FREE BUS & PERIMETER CONNECTOR ROUTING                        -->
+  <!-- ======================================================================= -->
+  <g id="ConnectorBusNetwork" stroke-width="2" fill="none">
+
+    <!-- 1. Stream 2 (15-min Epochs) -> Twin State Engine (Direct horizontal in gutter) -->
+    <path d="M 424 450 L 475 450" stroke="#38BDF8" marker-end="url(#arrCyanBold)"/>
+    <rect x="434" y="435" width="28" height="15" rx="3" fill="#0B1329" stroke="#0284C7" stroke-width="0.8"/>
+    <text x="437" y="446" fill="#38BDF8" font-size="8" font-weight="bold">Epochs</text>
+
+    <!-- 2. Stream 1 (12 Static Features) -> Static RF (Top Gutter Bus at y=114) -->
+    <path d="M 424 220 L 448 220 L 448 114 L 930 114 L 930 340 L 958 340" stroke="#60A5FA" stroke-dasharray="5,3" marker-end="url(#arrRoyal)"/>
+    <rect x="640" y="106" width="125" height="16" rx="4" fill="#0F172A" stroke="#3B82F6" stroke-width="0.8"/>
+    <text x="646" y="118" fill="#93C5FD" font-size="8.5" font-weight="bold">Stream 1: 12 Static Features Bus</text>
+
+    <!-- 3. PRIMARY PIPELINE SPINE (Stream 2 -> Dynamic RF): VIBRANT GLOWING CYAN BUS -->
+    <path d="M 424 620 L 448 620 L 448 540 L 930 540 L 930 230 L 958 230" stroke="#38BDF8" stroke-width="3" filter="url(#glowBlueHigh)" marker-end="url(#arrCyanBold)"/>
+    <rect x="635" y="532" width="135" height="16" rx="4" fill="#0B1C2E" stroke="#0284C7" stroke-width="0.8"/>
+    <text x="642" y="544" fill="#7DD3FC" font-size="8.5" font-weight="bold">Stream 2: 42 Dynamic Features Bus</text>
+
+    <!-- 4. PRIMARY PIPELINE SPINE (Dynamic RF -> DEFAULT PREDICTION): EXTRA PROMINENT -->
+    <path d="M 1397 215 L 1445 215" stroke="#38BDF8" stroke-width="4.5" filter="url(#glowBlueHigh)" marker-end="url(#arrCyanBold)"/>
+    <rect x="1404" y="196" width="36" height="15" rx="3" fill="#0284C7"/>
+    <text x="1407" y="207" fill="#FFFFFF" font-size="7.5" font-weight="800">PRIMARY</text>
+
+    <!-- 5. Dynamic RF -> Optional Late Fusion Box (Internal Column 3 flow) -->
+    <path d="M 975 280 L 975 454" stroke="#38BDF8" stroke-dasharray="4,2" marker-end="url(#arrCyanBold)"/>
+    <rect x="955" y="340" width="45" height="15" rx="3" fill="#061E30" stroke="#0284C7" stroke-width="0.8"/>
+    <text x="959" y="351" fill="#38BDF8" font-size="7.5" font-weight="bold">P_dyn</text>
+
+    <!-- 6. Static RF -> Optional Late Fusion Box (Internal Column 3 flow) -->
+    <path d="M 1175 402 L 1175 454" stroke="#60A5FA" stroke-dasharray="4,2" marker-end="url(#arrRoyal)"/>
+    <rect x="1155" y="418" width="45" height="15" rx="3" fill="#111C30" stroke="#1D4ED8" stroke-width="0.8"/>
+    <text x="1160" y="429" fill="#93C5FD" font-size="7.5" font-weight="bold">P_stat</text>
+
+    <!-- 7. Optional Late Fusion Box -> P_fusion Prediction Card (Amber dashed) -->
+    <path d="M 1397 680 L 1420 680 L 1420 205 L 1445 205" stroke="#F59E0B" stroke-width="2.2" stroke-dasharray="5,3" marker-end="url(#arrAmber)"/>
+    <rect x="1405" y="425" width="30" height="28" rx="3" fill="#241607" stroke="#D97706" stroke-width="0.8"/>
+    <text x="1408" y="437" fill="#FBBF24" font-size="7.5" font-weight="bold">P_fus</text>
+    <text x="1410" y="447" fill="#FBBF24" font-size="7.5" font-weight="bold">80/20</text>
+
+    <!-- 8. Right Perimeter Route: Default Output & Optional Output -> Dashboard -->
+    <path d="M 1875 215 L 1895 215 L 1895 440 L 1875 440" stroke="#38BDF8" stroke-width="2" marker-end="url(#arrCyanBold)"/>
+    <path d="M 1875 340 L 1895 340" stroke="#F59E0B" stroke-width="1.8" stroke-dasharray="4,2"/>
+
+    <!-- 9. Twin State Engine <-> What-If Simulator (Inter-card loop, zero connection to RF) -->
+    <path d="M 685 530 L 685 570" stroke="#C084FC" stroke-width="2" marker-end="url(#arrPurple)"/>
+    <path d="M 725 570 L 725 530" stroke="#C084FC" stroke-width="2" marker-end="url(#arrPurple)"/>
+    <rect x="675" y="558" width="60" height="14" rx="3" fill="#1C0E2B" stroke="#A21CAF" stroke-width="0.8"/>
+    <text x="680" y="568" fill="#F0ABFC" font-size="7.5" font-weight="bold">Perturbations</text>
+
+    <!-- 10. Public Synthetic Demo -> Dashboard (Bottom Perimeter Bus at y=982) -->
+    <path d="M 436 885 L 452 885 L 452 982 L 1420 982 L 1420 540 L 1445 540" stroke="#34D399" stroke-width="2" stroke-dasharray="6,4" marker-end="url(#arrGreen)"/>
+    <rect x="880" y="974" width="130" height="16" rx="4" fill="#042F24" stroke="#059669" stroke-width="0.8"/>
+    <text x="888" y="986" fill="#6EE7B7" font-size="8.5" font-weight="bold">Public Demo Cohort Bus (--demo)</text>
+  </g>
+
+  <!-- ======================================================================= -->
+  <!-- BOTTOM FOOTER & COMPREHENSIVE LEGEND                                    -->
+  <!-- ======================================================================= -->
+  <g id="BottomFooter" transform="translate(0, 1000)">
+    <rect width="1920" height="80" fill="#080C14" stroke="#1E293B" stroke-width="1.5"/>
+
+    <!-- Legend Items -->
+    <g transform="translate(45, 18)" font-size="11.5" font-weight="600">
+      <text x="0" y="14" fill="#94A3B8" font-size="12" font-weight="800">SYSTEM LEGEND:</text>
+
+      <!-- Legend 1: Excluded files boundary -->
+      <rect x="135" y="0" width="22" height="18" rx="3" fill="#450A0A" stroke="#EF4444" stroke-width="1.8" stroke-dasharray="4,2"/>
+      <text x="165" y="13" fill="#FCA5A5">Excluded by .gitignore</text>
+
+      <!-- Legend 2: Dynamic HRV Stream -->
+      <rect x="345" y="0" width="22" height="18" rx="3" fill="#0369A1" stroke="#38BDF8" stroke-width="2"/>
+      <text x="375" y="13" fill="#7DD3FC">Dynamic Stream (Exp 11)</text>
+
+      <!-- Legend 3: Static Clinical Stream -->
+      <rect x="560" y="0" width="22" height="18" rx="3" fill="#1E3A8A" stroke="#3B82F6" stroke-width="1.5"/>
+      <text x="590" y="13" fill="#93C5FD">Static Stream (Exp 13)</text>
+
+      <!-- Legend 4: Optional Late Fusion -->
+      <rect x="765" y="0" width="22" height="18" rx="3" fill="#78350F" stroke="#F59E0B" stroke-width="1.8" stroke-dasharray="4,2"/>
+      <text x="795" y="13" fill="#FDE68A">Optional Late Fusion (80/20)</text>
+
+      <!-- Legend 5: Twin State Engine / What-If -->
+      <rect x="1010" y="0" width="22" height="18" rx="3" fill="#581C87" stroke="#A78BFA" stroke-width="1.5"/>
+      <text x="1040" y="13" fill="#C4B5FD">Twin Engine &amp; Simulator</text>
+
+      <!-- Legend 6: Public Synthetic Bundle -->
+      <rect x="1235" y="0" width="22" height="18" rx="3" fill="#065F46" stroke="#34D399" stroke-width="1.5"/>
+      <text x="1265" y="13" fill="#6EE7B7">Public Demo Bundle</text>
+
+      <!-- Legend 7: Default Output Marker -->
+      <circle cx="1440" cy="9" r="7" fill="#0284C7" stroke="#38BDF8" stroke-width="2.5"/>
+      <text x="1455" y="13" fill="#F0F9FF" font-weight="bold">Default Output Flow</text>
+    </g>
+
+    <!-- Provenance Notice -->
+    <g transform="translate(45, 48)" font-size="10.5" fill="#64748B">
+      <text x="0" y="12">
+        PhysioNet SHAREE Database DOI: 10.13026/C2RC7C | Melillo et al. PLoS ONE (2015) | Open Data Commons Attribution License v1.0 (ODC-By v1.0).
+      </text>
+      <text x="960" y="12" fill="#94A3B8">
+        Architecture specification for Happiest Health Digital Twin Challenge 2026. Research prototype only — not validated for clinical care.
+      </text>
+    </g>
+  </g>
+
+</svg>

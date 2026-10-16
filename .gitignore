@@ -1,0 +1,81 @@
+# Python / Environments / Secrets
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.env
+.venv/
+venv/
+ENV/
+env/
+.secrets/
+*.pem
+credentials.json
+.pytest_cache/
+
+# Operating System & IDE Files
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+
+# Node (Preserving package-lock.json for reproducible installs)
+node_modules/
+
+# Raw and restricted patient data
+share_data/
+share_cohort_twin_states.csv
+share_patient_level_dataset.csv
+share_static_cohort.csv
+
+# Single-patient outputs & logs containing patient data
+patient_twin_dataset_*.csv
+static_profile_*.csv
+twin_baseline_*.csv
+twin_state_patient_*.csv
+twin_states_*_15min.csv
+twin_states_*_validated.csv
+test_api_out.txt
+test_out.txt
+test_results.txt
+test_simulator_out.txt
+
+# Experiment 08 patient-level trajectory dataset containing outcome labels
+experiment_08_twin_trajectory_dataset.csv
+
+# Targeted generated research plots (preserving non-generated PNGs)
+baseline_*_*.png
+rr_timeline_*.png
+twin_*_trajectory_*.png
+twin_state_deviation_*.png
+
+# OOF predictions containing true labels (High Leakage Risk)
+*oof_predictions.csv
+experiment_11_model/oof_predictions.csv
+
+# -------------------------------------------------------------
+# PENDING LICENSE REVIEW: Model Artifacts & Aggregate Results
+# -------------------------------------------------------------
+# These files are derived models and aggregate results.
+# They are excluded by default because you should not assume
+# they are approved for redistribution per the PhysioNet SHARE
+# dataset DUA. If approved, comment these lines out to track them.
+experiment_11_model/exploratory_rf_pipeline.joblib
+experiment_11_model/feature_importance.csv
+experiment_11_model/model_metadata.json
+experiment_11_model/dynamic_features.json
+experiment_06_model_results.csv
+experiment_07_group_importance.csv
+experiment_07_permutation_importance.csv
+experiment_07_rf_feature_importance.csv
+experiment_08_results.csv
+experiment_09_ablation_results.csv
+experiment_09_clean_ablation_results.csv
+experiment_10_feature_audit.csv
+
+# Experiment 13 model artifacts & generated results
+experiment_13_model/
+experiment_13_fusion_results.csv
+experiment_13_fold_metrics.csv
+experiment_13_oof_predictions.csv
+experiment_13_static_influence.csv
