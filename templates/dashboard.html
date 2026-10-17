@@ -469,6 +469,14 @@
             margin: 16px 0;
         }
 
+        .probability-indicator {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            flex-shrink: 0;
+            width: 90px;
+        }
+
         .probability-ring {
             position: relative;
             width: 90px;
@@ -820,19 +828,22 @@
             display: inline-block;
         }
 
-        /* Illustrative-score pill appended next to prediction value */
+        /* Illustrative-score pill displayed below the circular score indicator */
         .illustrative-pill {
             display: inline-block;
             background: rgba(14, 138, 125, 0.16);
             color: #14b8a6;
             border: 1px solid rgba(14, 138, 125, 0.35);
             border-radius: 4px;
-            font-size: 10px;
+            font-size: 9.5px;
             font-weight: 700;
             padding: 2px 7px;
-            margin-left: 8px;
-            letter-spacing: 0.04em;
-            vertical-align: middle;
+            margin-top: 8px;
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+            line-height: 1.2;
+            text-align: center;
+            white-space: nowrap;
         }
     </style>
 </head>
@@ -989,15 +1000,18 @@
                     </div>
 
                     <div class="probability-display">
-                        <div class="probability-ring" id="probRing">
-                            <svg width="90" height="90" viewBox="0 0 90 90">
-                                <circle class="ring-bg" cx="45" cy="45" r="38"/>
-                                <circle class="ring-fill" cx="45" cy="45" r="38"
-                                    stroke-dasharray="238.76"
-                                    stroke-dashoffset="238.76"
-                                    id="probRingFill"/>
-                            </svg>
-                            <span class="probability-number" id="probValue">—</span>
+                        <div class="probability-indicator">
+                            <div class="probability-ring" id="probRing">
+                                <svg width="90" height="90" viewBox="0 0 90 90">
+                                    <circle class="ring-bg" cx="45" cy="45" r="38"/>
+                                    <circle class="ring-fill" cx="45" cy="45" r="38"
+                                        stroke-dasharray="238.76"
+                                        stroke-dashoffset="238.76"
+                                        id="probRingFill"/>
+                                </svg>
+                                <span class="probability-number" id="probValue">—</span>
+                            </div>
+                            <span class="illustrative-pill" id="probIllustrativeBadge" style="display: none;">ILLUSTRATIVE</span>
                         </div>
                         <div class="probability-info">
                             <div class="probability-label" id="probLabel">Exploratory dynamic score</div>
@@ -1021,8 +1035,15 @@
             <div class="tab-panel" id="panel-twin-state">
                 <div class="card">
                     <div class="card-header">
-                        <span class="card-title">Current Twin State — Baseline Comparison</span>
+                        <span class="card-title">
+                            Current Twin State — Baseline Comparison
+                            <span class="header-demo-badge" id="twinStateDemoBadge">SYNTHETIC DEMO</span>
+                        </span>
                         <span class="card-badge" style="background:var(--accent-light); color:var(--accent);" id="currentStateLevel">—</span>
+                    </div>
+                    <div id="twinStateProvenanceNotice" style="display:none; margin-bottom:14px; padding:9px 12px; background:rgba(14, 138, 125, 0.08); border-left:3px solid #14b8a6; border-radius:4px; font-size:12px; color:#cbd5e1; line-height:1.45;">
+                        <strong style="color:#14b8a6;">Synthetic Demo Data:</strong>
+                        This digital twin state and its 15-minute trajectories are generated from physiologically modeled synthetic records for demonstration, not real patient telemetry from the SHARE database.
                     </div>
                     <p style="font-size:12px; color:var(--text-muted); margin-bottom:16px;">
                         Baseline is the patient's median physiological state across all 15-minute windows.
@@ -1045,6 +1066,7 @@
                                     <th>Window</th>
                                     <th>Time (h)</th>
                                     <th class="num">HR</th>
+                                    <th class="num">Mean RR (ms)</th>
                                     <th class="num">SDNN</th>
                                     <th class="num">RMSSD</th>
                                     <th class="num">pNN50</th>
@@ -1340,6 +1362,18 @@
                 } else {
                     headerBadge.classList.remove('visible');
                 }
+            }
+            const twinStateBadge = document.getElementById('twinStateDemoBadge');
+            if (twinStateBadge) {
+                if (isDemoMode) {
+                    twinStateBadge.classList.add('visible');
+                } else {
+                    twinStateBadge.classList.remove('visible');
+                }
+            }
+            const twinStateNotice = document.getElementById('twinStateProvenanceNotice');
+            if (twinStateNotice) {
+                twinStateNotice.style.display = isDemoMode ? 'block' : 'none';
             }
         }
 
@@ -1668,11 +1702,11 @@
             const labels = currentData.hrv_labels || {};
 
             let html = `<table class="state-table"><thead><tr>
-                <th>Feature</th>
+                <th>Signal / Metric</th>
                 <th class="num">Baseline</th>
                 <th class="num">Current</th>
                 <th class="num">Deviation</th>
-                <th class="num">Robust z</th>
+                <th class="num">Robust z / Score</th>
             </tr></thead><tbody>`;
 
             HRV_FEATURES.forEach(f => {
@@ -1693,15 +1727,18 @@
                 </tr>`;
             });
 
-            html += `<tr style="font-weight:600; background:var(--bg-primary);">
-                <td>Overall Twin Deviation</td>
-                <td class="num">0</td>
-                <td class="num">${cs.deviation_score}</td>
-                <td class="num">${cs.deviation_score}</td>
-                <td class="num"><span class="metric-baseline-tag ${STATE_CLASSES[cs.deviation_level] || ''}">${cs.deviation_level}</span></td>
-            </tr>`;
+            const scoreDisplay = typeof cs.deviation_score === 'number'
+                ? cs.deviation_score.toFixed(3)
+                : (cs.deviation_score ?? '—');
 
-            html += '</tbody></table>';
+            html += `</tbody><tfoot><tr style="font-weight:600; background:var(--bg-primary); border-top:2px solid var(--border);">
+                <td colspan="3">
+                    <strong>Overall Twin Deviation</strong>
+                    <span class="card-badge ${STATE_CLASSES[cs.deviation_level] || ''}" style="margin-left:8px; font-size:10.5px;">${cs.deviation_level}</span>
+                </td>
+                <td class="num" style="color:var(--text-muted); font-size:12px;">Aggregate Index</td>
+                <td class="num"><strong>${scoreDisplay}</strong></td>
+            </tr></tfoot></table>`;
             container.innerHTML = html;
         }
 
@@ -1723,10 +1760,14 @@
             for (let i = 0; i < n; i++) {
                 const level = t.deviation_levels[i];
                 const cls = STATE_CLASSES[level] || '';
+                const meanRR = (t.Mean_RR_ms_values && t.Mean_RR_ms_values[i] !== undefined && t.Mean_RR_ms_values[i] !== null)
+                    ? t.Mean_RR_ms_values[i].toFixed(1)
+                    : '—';
                 html += `<tr>
                     <td>${i + 1}</td>
                     <td>${t.time_hours[i]}</td>
                     <td class="num">${t.HR_bpm_values[i].toFixed(1)}</td>
+                    <td class="num">${meanRR}</td>
                     <td class="num">${t.SDNN_ms_values[i].toFixed(1)}</td>
                     <td class="num">${t.RMSSD_ms_values[i].toFixed(1)}</td>
                     <td class="num">${t.pNN50_percent_values[i].toFixed(2)}</td>
@@ -1905,16 +1946,15 @@
                 }
             }
 
+            const badgeEl = document.getElementById('probIllustrativeBadge');
+
             if (p.probability !== null && p.probability !== undefined) {
                 const pct = (p.probability * 100).toFixed(1);
-                let displayHtml = pct + '%';
+                probEl.textContent = pct + '%';
 
-                // If this prediction is flagged as illustrative, append
-                // a visible pill so it is never mistaken for a validated score.
-                if (p.is_illustrative) {
-                    displayHtml += '<span class="illustrative-pill">ILLUSTRATIVE</span>';
+                if (badgeEl) {
+                    badgeEl.style.display = p.is_illustrative ? 'inline-block' : 'none';
                 }
-                probEl.innerHTML = displayHtml;
 
                 // Animate ring — but use neutral grey for illustrative scores
                 const circumference = 2 * Math.PI * 38;
@@ -1933,6 +1973,9 @@
             } else {
                 probEl.textContent = '—';
                 ringEl.style.strokeDashoffset = 238.76;
+                if (badgeEl) {
+                    badgeEl.style.display = 'none';
+                }
             }
 
             let modelInfo = p.model_status || '';

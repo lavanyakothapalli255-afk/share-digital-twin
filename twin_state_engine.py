@@ -366,38 +366,66 @@ def get_twin_state_summary(enhanced_states, baseline):
 # TRAJECTORY EXTRACTION
 # ============================================================
 
-def extract_trajectory(enhanced_states):
+def extract_trajectory(enhanced_states, baseline=None):
     """
     Extract trajectory arrays for charting.
+
+    Parameters
+    ----------
+    enhanced_states : DataFrame
+        Per-window DataFrame with HRV features and deviations.
+    baseline : dict, optional
+        Precomputed authoritative baseline dictionary (feature -> float).
+        If provided, used directly instead of reverse-engineering from window 0.
 
     Returns a dict with:
         time_hours: list of floats
         For each HRV feature:
             {feature}_values: list of floats
-            {feature}_baseline: float
+            {feature}_baseline: float or None
         deviation_values: list of floats
         deviation_levels: list of strings
     """
+    if enhanced_states is None or enhanced_states.empty:
+        empty_traj = {
+            "time_hours": [],
+            "deviation_values": [],
+            "deviation_levels": [],
+        }
+        for feature in HRV_FEATURES:
+            empty_traj[feature + "_values"] = []
+            base_val = baseline.get(feature) if baseline else None
+            empty_traj[feature + "_baseline"] = _safe_round(base_val, 3)
+        return empty_traj
+
     df = enhanced_states.sort_values("window_id").reset_index(drop=True)
 
     trajectory = {
-        "time_hours": df["start_hour"].round(2).tolist(),
-        "deviation_values": df["Twin_State_Deviation"].round(3).tolist(),
-        "deviation_levels": df["State_Deviation_Level"].tolist(),
+        "time_hours": df["start_hour"].round(2).tolist() if "start_hour" in df.columns else [],
+        "deviation_values": df["Twin_State_Deviation"].round(3).tolist() if "Twin_State_Deviation" in df.columns else [],
+        "deviation_levels": df["State_Deviation_Level"].tolist() if "State_Deviation_Level" in df.columns else [],
     }
 
     for feature in HRV_FEATURES:
-        trajectory[feature + "_values"] = (
-            df[feature].round(3).tolist()
-        )
-        # Baseline is a single value per patient
-        if feature + "_deviation" in df.columns:
-            # Reconstruct baseline from current - deviation
-            first_current = df[feature].iloc[0]
-            first_dev = df[feature + "_deviation"].iloc[0]
-            trajectory[feature + "_baseline"] = round(
-                float(first_current - first_dev), 3
-            )
+        if feature in df.columns:
+            trajectory[feature + "_values"] = df[feature].round(3).tolist()
+        else:
+            trajectory[feature + "_values"] = []
+
+        # Authoritative baseline takes precedence
+        if baseline and feature in baseline and not pd.isna(baseline[feature]):
+            trajectory[feature + "_baseline"] = _safe_round(baseline[feature], 3)
+        elif feature + "_deviation" in df.columns and feature in df.columns:
+            # Fallback for legacy calls without baseline: find first valid window to avoid NaN from window 0 dropout
+            valid = df[[feature, feature + "_deviation"]].dropna()
+            if not valid.empty:
+                trajectory[feature + "_baseline"] = round(
+                    float(valid[feature].iloc[0] - valid[feature + "_deviation"].iloc[0]), 3
+                )
+            else:
+                trajectory[feature + "_baseline"] = None
+        else:
+            trajectory[feature + "_baseline"] = None
 
     return trajectory
 
@@ -470,7 +498,7 @@ def build_patient_twin(
     current_state = state_summaries[-1] if state_summaries else None
 
     # Trajectory
-    trajectory = extract_trajectory(enhanced)
+    trajectory = extract_trajectory(enhanced, baseline=baseline)
 
     # Deviation distribution
     dist = enhanced["State_Deviation_Level"].value_counts().to_dict()
