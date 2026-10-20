@@ -485,7 +485,6 @@ When running the dashboard (`http://127.0.0.1:5000`):
 | **Durga Swetha Sri Kamana** | Machine Learning & Evaluation | Worked on machine learning models, evaluation, and feature importance analysis. |
 | **Suji Muramalla** | Testing & Presentation | Worked on dashboard testing, visualizations, architecture preparation, and presentation development. |
 
-> *Note: Contact details and individual GitHub profiles can be added when available.*
 
 ---
 
