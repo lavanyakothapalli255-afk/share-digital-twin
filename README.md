@@ -493,7 +493,7 @@ When running the dashboard (`http://127.0.0.1:5000`):
 
 | Deliverable | Requirement | Submission Status / Link |
 |---|---|---|
-| **Demonstration Video** | Comprehensive video walk-through ($\ge 20$ minutes in duration) covering clinical use case, architecture, code walk-through, live dashboard demo, and limitations. | `[Pending - Video Link to be provided: https://...]` *(Duration: >= 20 mins)* |
+| **Demonstration Video** | Comprehensive video walkthrough (20 minutes 33 seconds). | [Watch Demo](https://youtu.be/SHqkDYNv4Tk) |
 | **System Architecture Document** | Standalone architecture diagram and technical design document in PDF or PPT format. | [architecture/architecture_diagram.pdf](architecture/architecture_diagram.pdf) |
 | **Final Presentation Slide Deck** | Comprehensive presentation slide deck covering challenge problem, methodology, results, and digital twin impact in PDF or PPT format. | `[Pending - Final Presentation PDF/PPT Link to be provided]` |
 | **Public GitHub Repository** | Public open-source code repository with clean-clone reproducibility and documentation. | `[https://github.com/lavanyakothapalli255-afk/share-digital-twin]` |
